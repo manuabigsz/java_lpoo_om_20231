@@ -7,6 +7,8 @@ package br.edu.ifsul.cc.lpoo.om.model;
 import java.util.Calendar;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -45,8 +47,8 @@ public class Pagamento {
     @JoinColumn(name = "servico", nullable = false)
     private Servico servico;
     
-    @ManyToOne
-    @JoinColumn(name = "formaPagamento", nullable = false)
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private FormaPagamento formaPagamento;
 
     public Pagamento() {

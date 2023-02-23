@@ -44,9 +44,9 @@ public class Orcamento {
                                        inverseJoinColumns = {@JoinColumn(name = "maoObra_id")})
     private List<MaoObra> maoObra = new ArrayList<>();
      
-     
+     //associação
     @ManyToOne
-    @JoinColumn(name = "veiculo", nullable = false)
+    @JoinColumn(name = "veiculo_placa", nullable = false)
     private Veiculo veiculo;
     
     

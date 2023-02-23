@@ -10,6 +10,8 @@ import java.util.Calendar;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -42,8 +44,8 @@ public class Servico implements Serializable {
     private Calendar data_fim;
     
 
-     @ManyToOne
-    @JoinColumn(name = "status_servico", nullable = false)
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private StatusServico status;
     
 
