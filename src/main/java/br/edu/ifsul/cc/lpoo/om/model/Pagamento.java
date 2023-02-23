@@ -16,7 +16,7 @@ public class Pagamento {
     private Calendar data_vencimento;
     private Calendar data_pagamento;
     private Float valor;
-    
+    private Servico servico;
     private FormaPagamento formaPagamento;
     
     public Pagamento(){
@@ -104,6 +104,20 @@ public class Pagamento {
      */
     public void setFormaPagamento(FormaPagamento formaPagamento) {
         this.formaPagamento = formaPagamento;
+    }
+
+    /**
+     * @return the servico
+     */
+    public Servico getServico() {
+        return servico;
+    }
+
+    /**
+     * @param servico the servico to set
+     */
+    public void setServico(Servico servico) {
+        this.servico = servico;
     }
     
     
