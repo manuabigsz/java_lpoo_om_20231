@@ -4,18 +4,48 @@
  */
 package br.edu.ifsul.cc.lpoo.om.model;
 
+import java.io.Serializable;
 import java.util.Calendar;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
  * @author 20212pf.cc0010
  */
+@Entity
+@Table(name="tb_pessoa")
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name="Tipo")
+
 public abstract class Pessoa {
+    @Id
+    
+    @Column(nullable = false, length = 100)
     private String cpf;
+    
+    @Column(nullable = false)
     private String nome;
+    
+    @Column(nullable = false)
     private String senha;
+    
+    @Column(nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Calendar data_nascimento;
+    
+    @Column(nullable = false)
     private String cep;
+    
+    @Column(nullable = true)
     private String complemento;
     
     public Pessoa(){

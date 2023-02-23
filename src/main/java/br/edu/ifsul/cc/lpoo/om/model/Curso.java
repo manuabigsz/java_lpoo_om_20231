@@ -5,18 +5,36 @@
 package br.edu.ifsul.cc.lpoo.om.model;
 
 import java.util.Calendar;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
  * @author 20212pf.cc0010
  */
+@Entity
+@Table(name = "tb_curso")
 public class Curso {
+
+    @Id
+    @Column(nullable = false, length = 100)
     private String placa;
+
+    @Column(nullable = false)
     private String modelo;
+
+    @Column(nullable = false)
     private Integer ano;
+
+    @Column(nullable = true)
+    @Temporal(TemporalType.TIMESTAMP)
     private Calendar data_ultimo_servico;
-    
-    public Curso(){
+
+    public Curso() {
     }
 
     /**
@@ -74,6 +92,5 @@ public class Curso {
     public void setData_ultimo_servico(Calendar data_ultimo_servico) {
         this.data_ultimo_servico = data_ultimo_servico;
     }
-    
-    
+
 }

@@ -4,17 +4,35 @@
  */
 package br.edu.ifsul.cc.lpoo.om.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  *
  * @author 20212pf.cc0010
  */
+@Entity
+
+@Table(name = "tb_peca")
+
 public class Peca {
+
+    @Id
+    @Column(nullable = false, length = 100)
     private Integer id;
-    private String nome;
-    private Float valor;
-    private String fornecedor;
     
-    public Peca(){
+    @Column(nullable = false)
+    private String nome;
+    
+    @Column(nullable = false)
+    private Float valor;
+    
+    @Column(nullable = true)
+    private String fornecedor;
+
+    public Peca() {
     }
 
     /**
@@ -72,6 +90,5 @@ public class Peca {
     public void setFornecedor(String fornecedor) {
         this.fornecedor = fornecedor;
     }
-    
-    
+
 }

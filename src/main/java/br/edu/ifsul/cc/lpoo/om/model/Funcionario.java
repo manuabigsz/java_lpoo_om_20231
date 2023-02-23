@@ -7,21 +7,49 @@ package br.edu.ifsul.cc.lpoo.om.model;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
  * @author 20212pf.cc0010
  */
-public class Funcionario extends Pessoa{
+@Entity
+@DiscriminatorValue("F")
+
+public class Funcionario extends Pessoa {
+
+    @Id
+    @Column(nullable = false, length = 100)
     private String numero_ctps;
+    
+    @Column(nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Calendar data_admissao;
+    
+    @Column(nullable = true)
+    @Temporal(TemporalType.TIMESTAMP)
     private Calendar data_demissao;
-    
+
+    @ManyToMany
+     @JoinTable(name = "tb_funcionario_curso", joinColumns = {@JoinColumn(name = "funcionario_ctps")}, //agregacao, vai gerar uma tabela associativa.
+                                       inverseJoinColumns = {@JoinColumn(name = "curso_nome")})
     private List<Curso> curso = new ArrayList<>();
+    
+    @ManyToOne
+    @JoinColumn(name = "equipe", nullable = false)
     private Cargo cargo;
-    
-    public Funcionario(){
-    
+
+    public Funcionario() {
+
     }
 
     /**
@@ -93,6 +121,5 @@ public class Funcionario extends Pessoa{
     public void setCargo(Cargo cargo) {
         this.cargo = cargo;
     }
-    
-    
+
 }

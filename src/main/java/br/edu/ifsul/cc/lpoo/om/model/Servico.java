@@ -4,23 +4,60 @@
  */
 package br.edu.ifsul.cc.lpoo.om.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
  * @author 20212pf.cc0010
  */
-public class Servico {
+@Entity
+@Table(name="tb_servico")
+public class Servico implements Serializable {
+    @Id
+    
+    @Column(nullable = false, length = 100)
     private Integer id;
+    
+    @Column(nullable = false)
     private Float valor;
+    
+    @Column(nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Calendar data_inicio;
+    
+    @Column(nullable = true)
+    @Temporal(TemporalType.TIMESTAMP)
     private Calendar data_fim;
     
+
+     @ManyToOne
+    @JoinColumn(name = "status_servico", nullable = false)
     private StatusServico status;
+    
+
+     @ManyToOne
+    @JoinColumn(name = "orcamento", nullable = false)
     private Orcamento orcamento;
+    
+
+    @ManyToOne
+    @JoinColumn(name = "equipe", nullable = false)
     private Equipe equipe;
+    
+   
+    @OneToMany(mappedBy = "Pagamento")
     private List<Pagamento> listaPagamento = new ArrayList<>();
 
     

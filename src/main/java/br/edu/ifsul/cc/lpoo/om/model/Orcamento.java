@@ -7,21 +7,60 @@ package br.edu.ifsul.cc.lpoo.om.model;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
  * @author 20212pf.cc0010
  */
+@Entity
+@Table(name="tb_orcamento")
+
 public class Orcamento {
+    
+    @Id
+    @Column(nullable = false, length = 100)
     private Integer id;
+    
+    @Column(nullable = false)
     private String observacoes;
+
+    @Column(nullable = true)
+    @Temporal(TemporalType.TIMESTAMP)
     private Calendar data;
 
+    
+     @ManyToMany
+    @JoinTable(name = "tb_orcamento_maoObra", joinColumns = {@JoinColumn(name = "orcamento_id")}, //agregacao, vai gerar uma tabela associativa.
+                                       inverseJoinColumns = {@JoinColumn(name = "maoObra_id")})
     private List<MaoObra> maoObra = new ArrayList<>();
+     
+     
+    @ManyToOne
+    @JoinColumn(name = "veiculo", nullable = false)
     private Veiculo veiculo;
+    
+    
+    @ManyToMany
+    @JoinTable(name = "tb_orcamento_peca", joinColumns = {@JoinColumn(name = "orcamento_id")}, //agregacao, vai gerar uma tabela associativa.
+                                       inverseJoinColumns = {@JoinColumn(name = "maoObra_id")})    
     private List<Peca> peca = new ArrayList<>();
     
+    @ManyToOne
+    @JoinColumn(name = "veiculo", nullable = false)
     private Cliente cliente;
+    
+    @ManyToOne
+    @JoinColumn(name = "veiculo", nullable = false)
     private Funcionario funcionario;
     
     public Orcamento(){

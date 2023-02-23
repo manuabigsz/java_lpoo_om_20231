@@ -5,18 +5,38 @@
 package br.edu.ifsul.cc.lpoo.om.model;
 
 import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
  * @author 20212pf.cc0010
  */
+@Entity
+
+@Table(name = "tb_maoObra")
 public class MaoObra {
+
+    @Id
+
+    @Column(nullable = false, length = 100)
     private Integer id;
+
+    @Column(nullable = false)
     private String descricao;
+
+    @Column(nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date tempo_estimado_execucao;
+
+    @Column(nullable = true)
     private Float valor;
-    
-    public MaoObra(){
+
+    public MaoObra() {
     }
 
     /**
@@ -74,6 +94,5 @@ public class MaoObra {
     public void setValor(Float valor) {
         this.valor = valor;
     }
-    
-    
+
 }

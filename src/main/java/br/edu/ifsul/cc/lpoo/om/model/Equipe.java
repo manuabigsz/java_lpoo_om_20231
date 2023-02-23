@@ -6,16 +6,30 @@ package br.edu.ifsul.cc.lpoo.om.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 /**
  *
  * @author 20212pf.cc0010
  */
+@Entity
+@Table(name="tb_equipe")
 public class Equipe {
+    @Id
+    @Column(nullable = false, length = 100)
     private Integer id;
+    
+    @Column(nullable = false)
     private String nome;
+    
+    @Column(nullable = true)
     private String especialidades;
     
+    @OneToMany(mappedBy = "Funcionario")
     private List<Funcionario> funcionario = new ArrayList<>();
     
     public Equipe(){

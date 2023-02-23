@@ -5,21 +5,51 @@
 package br.edu.ifsul.cc.lpoo.om.model;
 
 import java.util.Calendar;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
  * @author 20212pf.cc0010
  */
+@Entity
+@Table(name = "tb_pagamento")
+
 public class Pagamento {
+
+    @Id
+    @Column(nullable = false, length = 100)
     private Integer id;
+
+    @Column(nullable = false)
     private Integer numero_parcela;
+
+    @Column(nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Calendar data_vencimento;
+
+    @Column(nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Calendar data_pagamento;
-    private Float valor;
-    private Servico servico;
-    private FormaPagamento formaPagamento;
     
-    public Pagamento(){
+    @Column(nullable = true)
+    private Float valor;
+    
+    @ManyToOne
+    @JoinColumn(name = "servico", nullable = false)
+    private Servico servico;
+    
+    @ManyToOne
+    @JoinColumn(name = "formaPagamento", nullable = false)
+    private FormaPagamento formaPagamento;
+
+    public Pagamento() {
     }
 
     /**
@@ -119,6 +149,5 @@ public class Pagamento {
     public void setServico(Servico servico) {
         this.servico = servico;
     }
-    
-    
+
 }

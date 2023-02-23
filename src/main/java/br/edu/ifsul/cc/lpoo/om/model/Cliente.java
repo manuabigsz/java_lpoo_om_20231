@@ -6,17 +6,37 @@ package br.edu.ifsul.cc.lpoo.om.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 
 /**
  *
  * @author 20212pf.cc0010
  */
-public class Cliente extends Pessoa{
+@Entity
+@DiscriminatorValue("C")
+
+public class Cliente extends Pessoa {
+
+    @Id
+    @Column(nullable = true, length = 100)
     private String observacoes;
+
+    @ManyToMany
+    @JoinTable(name = "tb_cliente_veiculos", joinColumns = {
+        @JoinColumn(name = "cliente_nome")}, //agregacao, vai gerar uma tabela associativa.
+            inverseJoinColumns = {
+                @JoinColumn(name = "veiculo_placa")})
     private List<Veiculo> veiculo = new ArrayList<>();
-    
-    public Cliente(){
-    
+
+    public Cliente() {
+
     }
 
     /**
@@ -46,5 +66,5 @@ public class Cliente extends Pessoa{
     public void setVeiculo(List<Veiculo> veiculo) {
         this.veiculo = veiculo;
     }
-    
+
 }
