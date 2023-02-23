@@ -4,6 +4,7 @@
  */
 package br.edu.ifsul.cc.lpoo.om.model;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -17,7 +18,7 @@ import javax.persistence.Table;
 
 @Table(name = "tb_peca")
 
-public class Peca {
+public class Peca implements Serializable{
 
     @Id
     @Column(nullable = false, length = 100)

@@ -4,6 +4,7 @@
  */
 package br.edu.ifsul.cc.lpoo.om.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,7 +20,7 @@ import javax.persistence.TemporalType;
 @Entity
 
 @Table(name = "tb_maoObra")
-public class MaoObra {
+public class MaoObra implements Serializable{
 
     @Id
 

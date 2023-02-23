@@ -4,6 +4,7 @@
  */
 package br.edu.ifsul.cc.lpoo.om.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -25,7 +26,7 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name="tb_orcamento")
 
-public class Orcamento {
+public class Orcamento implements Serializable{
     
     @Id
     @Column(nullable = false, length = 100)

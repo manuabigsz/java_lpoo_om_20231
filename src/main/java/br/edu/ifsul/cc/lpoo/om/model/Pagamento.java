@@ -4,6 +4,7 @@
  */
 package br.edu.ifsul.cc.lpoo.om.model;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,7 +24,7 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "tb_pagamento")
 
-public class Pagamento {
+public class Pagamento implements Serializable{
 
     @Id
     @Column(nullable = false, length = 100)

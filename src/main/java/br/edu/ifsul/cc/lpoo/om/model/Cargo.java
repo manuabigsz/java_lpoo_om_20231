@@ -4,6 +4,7 @@
  */
 package br.edu.ifsul.cc.lpoo.om.model;
 
+import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,7 +16,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "tb_cargo")
-public class Cargo {
+public class Cargo implements Serializable{
 
     @Id
     @Column(nullable = false, length = 100)
