@@ -40,12 +40,12 @@ public class Funcionario extends Pessoa {
     private Calendar data_demissao;
 
     @ManyToMany
-     @JoinTable(name = "tb_funcionario_curso", joinColumns = {@JoinColumn(name = "funcionario_ctps")}, //agregacao, vai gerar uma tabela associativa.
-                                       inverseJoinColumns = {@JoinColumn(name = "curso_nome")})
+     @JoinTable(name = "tb_funcionario_curso", joinColumns = {@JoinColumn(name = "pessoa_cpf")}, //agregacao, vai gerar uma tabela associativa.
+                                       inverseJoinColumns = {@JoinColumn(name = "curso_id")})
     private List<Curso> curso = new ArrayList<>();
     
     @ManyToOne
-    @JoinColumn(name = "equipe", nullable = false)
+    @JoinColumn(name = "cargo", nullable = false)
     private Cargo cargo;
 
     public Funcionario() {

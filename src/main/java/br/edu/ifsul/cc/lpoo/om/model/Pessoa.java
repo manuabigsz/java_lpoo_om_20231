@@ -23,10 +23,14 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name="tb_pessoa")
+
+//definição da herança e estratégia
 @Inheritance(strategy = InheritanceType.JOINED)
+
+//definição da coluna discriminatória
 @DiscriminatorColumn(name="Tipo")
 
-public abstract class Pessoa {
+public abstract class Pessoa implements Serializable{
     @Id
     
     @Column(nullable = false, length = 100)
