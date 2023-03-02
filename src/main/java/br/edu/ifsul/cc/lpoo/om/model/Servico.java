@@ -12,10 +12,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -28,11 +31,11 @@ import javax.persistence.TemporalType;
 @Table(name="tb_servico")
 public class Servico implements Serializable {
     @Id
-    
-    @Column(nullable = false, length = 100)
+    @SequenceGenerator(name = "seq_servico", sequenceName = "seq_servico_id", allocationSize = 1)
+    @GeneratedValue(generator = "seq_servico", strategy = GenerationType.SEQUENCE) 
     private Integer id;
     
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 2)
     private Float valor;
     
     @Column(nullable = false)

@@ -21,16 +21,17 @@ import javax.persistence.Table;
  */
 @Entity
 @DiscriminatorValue("C")
+@Table(name = "tb_cliente")
 
 public class Cliente extends Pessoa {
 
-    @Id
-    @Column(nullable = true, length = 100)
+
+    @Column(nullable = false, length = 100)
     private String observacoes;
 
     @ManyToMany
     @JoinTable(name = "tb_cliente_veiculos", joinColumns = {
-        @JoinColumn(name = "cliente_nome")}, //agregacao, vai gerar uma tabela associativa.
+        @JoinColumn(name = "cliente_cpf")}, //agregacao, vai gerar uma tabela associativa.
             inverseJoinColumns = {
                 @JoinColumn(name = "veiculo_placa")})
     private List<Veiculo> veiculo = new ArrayList<>();

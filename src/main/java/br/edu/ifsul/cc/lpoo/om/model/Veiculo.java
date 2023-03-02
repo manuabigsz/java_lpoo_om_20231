@@ -14,35 +14,31 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-
-
 /**
  *
  * @author 20212pf.cc0010
  */
-
 @Entity //indica que a classe veiculo será gerenciada pelo jpa/hibernate
-        
-@Table(name="tb_veiculo") // defini o formato do armazenamento (em tabela)
+
+@Table(name = "tb_veiculo") // defini o formato do armazenamento (em tabela)
 
 public class Veiculo implements Serializable {
-   @Id //definção do atributo que será a chave primaria
+
+    @Id //definção do atributo que será a chave primaria
     private String placa;
+
     @Column(nullable = false, length = 100) // coluna obrigatoria e de 100
     private String modelo;
 
     @Column(nullable = false)
     private Integer ano;
 
-   @Column(nullable = true)
-   @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = true)
+    @Temporal(TemporalType.TIMESTAMP)
     private Calendar data_ultimo_servico;
-    
-    
-    
-    
-    public Veiculo(){
-     
+
+    public Veiculo() {
+
     }
 
     /**
@@ -100,6 +96,5 @@ public class Veiculo implements Serializable {
     public void setData_ultimo_servico(Calendar data_ultimo_servico) {
         this.data_ultimo_servico = data_ultimo_servico;
     }
-    
-    
+
 }

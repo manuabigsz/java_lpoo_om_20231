@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -24,19 +25,20 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @DiscriminatorValue("F")
+@Table(name = "tb_funcionario")
 
 public class Funcionario extends Pessoa {
 
-    @Id
+ 
     @Column(nullable = false, length = 100)
     private String numero_ctps;
     
     @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Calendar data_admissao;
     
     @Column(nullable = true)
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     private Calendar data_demissao;
 
     @ManyToMany

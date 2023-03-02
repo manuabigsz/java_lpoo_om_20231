@@ -8,7 +8,10 @@ import java.io.Serializable;
 import java.util.Calendar;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -22,76 +25,80 @@ import javax.persistence.TemporalType;
 public class Curso implements Serializable{
 
     @Id
-    @Column(nullable = false, length = 100)
-    private String placa;
-
-    @Column(nullable = false)
-    private String modelo;
-
-    @Column(nullable = false)
-    private Integer ano;
-
+    @SequenceGenerator(name = "seq_curso", sequenceName = "seq_curso_id", allocationSize = 1)
+    @GeneratedValue(generator = "seq_curso", strategy = GenerationType.SEQUENCE) 
+    private Integer id;
+    
+    @Column(nullable = false, length = 200)
+    private String descricao;
+    
     @Column(nullable = true)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Calendar data_ultimo_servico;
-
-    public Curso() {
+    @Temporal(TemporalType.DATE) 
+    private Calendar dt_conclusao;
+    
+    @Column(nullable = true)
+    private Integer cargahoraria;
+    
+    public Curso(){
+        
     }
 
     /**
-     * @return the placa
+     * @return the id
      */
-    public String getPlaca() {
-        return placa;
+    public Integer getId() {
+        return id;
     }
 
     /**
-     * @param placa the placa to set
+     * @param id the id to set
      */
-    public void setPlaca(String placa) {
-        this.placa = placa;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     /**
-     * @return the modelo
+     * @return the descricao
      */
-    public String getModelo() {
-        return modelo;
+    public String getDescricao() {
+        return descricao;
     }
 
     /**
-     * @param modelo the modelo to set
+     * @param descricao the descricao to set
      */
-    public void setModelo(String modelo) {
-        this.modelo = modelo;
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     /**
-     * @return the ano
+     * @return the dt_conclusao
      */
-    public Integer getAno() {
-        return ano;
+    public Calendar getDt_conclusao() {
+        return dt_conclusao;
     }
 
     /**
-     * @param ano the ano to set
+     * @param dt_conclusao the dt_conclusao to set
      */
-    public void setAno(Integer ano) {
-        this.ano = ano;
+    public void setDt_conclusao(Calendar dt_conclusao) {
+        this.dt_conclusao = dt_conclusao;
     }
 
     /**
-     * @return the data_ultimo_servico
+     * @return the cargahoraria
      */
-    public Calendar getData_ultimo_servico() {
-        return data_ultimo_servico;
+    public Integer getCargahoraria() {
+        return cargahoraria;
     }
 
     /**
-     * @param data_ultimo_servico the data_ultimo_servico to set
+     * @param cargahoraria the cargahoraria to set
      */
-    public void setData_ultimo_servico(Calendar data_ultimo_servico) {
-        this.data_ultimo_servico = data_ultimo_servico;
+    public void setCargahoraria(Integer cargahoraria) {
+        this.cargahoraria = cargahoraria;
     }
+    
+   
 
 }

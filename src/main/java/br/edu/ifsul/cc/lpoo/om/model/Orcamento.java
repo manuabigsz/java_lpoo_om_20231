@@ -10,11 +10,14 @@ import java.util.Calendar;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -24,47 +27,48 @@ import javax.persistence.TemporalType;
  * @author 20212pf.cc0010
  */
 @Entity
-@Table(name="tb_orcamento")
+@Table(name = "tb_orcamento")
 
-public class Orcamento implements Serializable{
-    
+public class Orcamento implements Serializable {
+
     @Id
-    @Column(nullable = false, length = 100)
+    @SequenceGenerator(name = "seq_orcamento", sequenceName = "seq_orcamento_id", allocationSize = 1)
+    @GeneratedValue(generator = "seq_orcamento", strategy = GenerationType.SEQUENCE)  
     private Integer id;
     
-    @Column(nullable = false)
+    @Column(nullable = true, length = 100)
     private String observacoes;
-
-    @Column(nullable = true)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Calendar data;
-
     
-     @ManyToMany
-    @JoinTable(name = "tb_orcamento_maoObra", joinColumns = {@JoinColumn(name = "orcamento_id")}, //agregacao, vai gerar uma tabela associativa.
-                                       inverseJoinColumns = {@JoinColumn(name = "maoObra_id")})
-    private List<MaoObra> maoObra = new ArrayList<>();
-     
-     //associação
+    @Column(nullable = true)
+    @Temporal(TemporalType.TIMESTAMP)    
+    private Calendar data;
+    
+    @ManyToOne
+    @JoinColumn(name = "cliente_cpf", nullable = false)
+    private Cliente cliente;
+    
+    //associacao
     @ManyToOne
     @JoinColumn(name = "veiculo_placa", nullable = false)
     private Veiculo veiculo;
     
     
     @ManyToMany
-    @JoinTable(name = "tb_orcamento_peca", joinColumns = {@JoinColumn(name = "orcamento_id")}, //agregacao, vai gerar uma tabela associativa.
-                                       inverseJoinColumns = {@JoinColumn(name = "maoObra_id")})    
-    private List<Peca> peca = new ArrayList<>();
+    @JoinTable(name = "tb_orcamento_peca", joinColumns = {@JoinColumn(name = "cliente_cpf")}, //agregacao, vai gerar uma tabela associativa.
+                                       inverseJoinColumns = {@JoinColumn(name = "peca_id")})     
+    private List<Peca> peca;
     
-    @ManyToOne
-    @JoinColumn(name = "veiculo", nullable = false)
-    private Cliente cliente;
     
-    @ManyToOne
-    @JoinColumn(name = "veiculo", nullable = false)
-    private Funcionario funcionario;
+    @ManyToMany
+    @JoinTable(name = "tb_orcamento_maoobra", joinColumns = {@JoinColumn(name = "cliente_cpf")}, //agregacao, vai gerar uma tabela associativa.
+                                       inverseJoinColumns = {@JoinColumn(name = "peca_id")})     
+    private List<MaoObra> maoObra;
     
-    public Orcamento(){
+    
+    @Column(nullable = false, precision = 2)
+    private Float valorTotal;
+    
+    public Orcamento() {
     }
 
     /**
@@ -110,17 +114,17 @@ public class Orcamento implements Serializable{
     }
 
     /**
-     * @return the maoObra
+     * @return the cliente
      */
-    public List<MaoObra> getMaoObra() {
-        return maoObra;
+    public Cliente getCliente() {
+        return cliente;
     }
 
     /**
-     * @param maoObra the maoObra to set
+     * @param cliente the cliente to set
      */
-    public void setMaoObra(List<MaoObra> maoObra) {
-        this.maoObra = maoObra;
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
     }
 
     /**
@@ -152,31 +156,33 @@ public class Orcamento implements Serializable{
     }
 
     /**
-     * @return the cliente
+     * @return the maoObra
      */
-    public Cliente getCliente() {
-        return cliente;
+    public List<MaoObra> getMaoObra() {
+        return maoObra;
     }
 
     /**
-     * @param cliente the cliente to set
+     * @param maoObra the maoObra to set
      */
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public void setMaoObra(List<MaoObra> maoObra) {
+        this.maoObra = maoObra;
     }
 
     /**
-     * @return the funcionario
+     * @return the valorTotal
      */
-    public Funcionario getFuncionario() {
-        return funcionario;
+    public Float getValorTotal() {
+        return valorTotal;
     }
 
     /**
-     * @param funcionario the funcionario to set
+     * @param valorTotal the valorTotal to set
      */
-    public void setFuncionario(Funcionario funcionario) {
-        this.funcionario = funcionario;
+    public void setValorTotal(Float valorTotal) {
+        this.valorTotal = valorTotal;
     }
-    
+
+   
+
 }

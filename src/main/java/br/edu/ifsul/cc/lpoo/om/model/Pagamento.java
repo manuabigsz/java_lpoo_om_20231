@@ -10,9 +10,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -27,7 +30,8 @@ import javax.persistence.TemporalType;
 public class Pagamento implements Serializable{
 
     @Id
-    @Column(nullable = false, length = 100)
+    @SequenceGenerator(name = "seq_pagamento", sequenceName = "seq_pagamento_id", allocationSize = 1)
+    @GeneratedValue(generator = "seq_pagamento", strategy = GenerationType.SEQUENCE) 
     private Integer id;
 
     @Column(nullable = false)
@@ -41,7 +45,7 @@ public class Pagamento implements Serializable{
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar data_pagamento;
     
-    @Column(nullable = true)
+    @Column(nullable = true, precision = 2)
     private Float valor;
     
     @ManyToOne

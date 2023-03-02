@@ -22,48 +22,52 @@ import javax.persistence.TemporalType;
  * @author 20212pf.cc0010
  */
 @Entity
-@Table(name="tb_pessoa")
+@Table(name = "tb_pessoa")
 
 //definição da herança e estratégia
 @Inheritance(strategy = InheritanceType.JOINED)
 
 //definição da coluna discriminatória
-@DiscriminatorColumn(name="Tipo")
+@DiscriminatorColumn(name = "Tipo")
 
-public abstract class Pessoa implements Serializable{
+public abstract class Pessoa implements Serializable {
+
     @Id
-    
-    @Column(nullable = false, length = 100)
+
     private String cpf;
-    
-    @Column(nullable = false)
+
+    @Column(nullable = false, length = 300)
     private String nome;
-    
-    @Column(nullable = false)
+
+    @Column(nullable = false, length = 8)
     private String senha;
-    
-    @Column(nullable = false)
+
+    @Column(nullable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar data_nascimento;
-    
-    @Column(nullable = false)
+
+    @Column(nullable = false, length = 8)
     private String cep;
-    
-    @Column(nullable = true)
+
+    @Column(nullable = false, length = 20)
+    private String numero;
+
+    @Column(nullable = false, length = 100)
     private String complemento;
-    
-    public Pessoa(){
-    
+
+    public Pessoa() {
+
     }
-    
-    public Pessoa(String cpf,  String nome, String senha, Calendar data_nascimento, String cep, String complemento){
-        this.cpf=cpf;
-        this.nome=nome;
-        this.senha=senha;
-        this.data_nascimento=data_nascimento;
-        this.cep=cep;
-        this.complemento=complemento;
-        
+
+    public Pessoa(String cpf, String nome, String senha, Calendar data_nascimento, String cep, String numero, String complemento) {
+        this.cpf = cpf;
+        this.nome = nome;
+        this.senha = senha;
+        this.data_nascimento = data_nascimento;
+        this.cep = cep;
+        this.numero = numero;
+        this.complemento = complemento;
+
     }
 
     /**
@@ -139,6 +143,9 @@ public abstract class Pessoa implements Serializable{
     /**
      * @return the complemento
      */
+    
+    
+    
     public String getComplemento() {
         return complemento;
     }
@@ -149,7 +156,19 @@ public abstract class Pessoa implements Serializable{
     public void setComplemento(String complemento) {
         this.complemento = complemento;
     }
-    
-    
-    
+
+    /**
+     * @return the numero
+     */
+    public String getNumero() {
+        return numero;
+    }
+
+    /**
+     * @param numero the numero to set
+     */
+    public void setNumero(String numero) {
+        this.numero = numero;
+    }
+
 }
