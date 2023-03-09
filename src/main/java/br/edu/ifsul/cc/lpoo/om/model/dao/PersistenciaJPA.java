@@ -5,6 +5,8 @@
 package br.edu.ifsul.cc.lpoo.om.model.dao;
 
 import br.edu.ifsul.cc.lpoo.om.model.Funcionario;
+import br.edu.ifsul.cc.lpoo.om.model.Peca;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -58,10 +60,20 @@ public class PersistenciaJPA implements InterfacePersistencia{
         entity.getTransaction().commit();
      
     }
+    
+   @Override
+    public List <Peca> listPecas() throws Exception {
+    
+        return entity.createNamedQuery("Peca.getbyid").getResultList();
+        
+    }
 
     @Override
     public Funcionario doLogin(String cpf, String senha) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+    
+
+   
     
 }

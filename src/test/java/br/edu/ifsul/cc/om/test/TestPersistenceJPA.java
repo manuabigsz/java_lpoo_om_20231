@@ -6,6 +6,7 @@ package br.edu.ifsul.cc.om.test;
 
 import br.edu.ifsul.cc.lpoo.om.model.Peca;
 import br.edu.ifsul.cc.lpoo.om.model.dao.PersistenciaJPA;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.Test;
@@ -16,7 +17,7 @@ import org.junit.Test;
  */
 public class TestPersistenceJPA {
 
-    @Test
+   // @Test
     public void testConexaoGeracaoTabelas() {
 
         PersistenciaJPA persistencia = new PersistenciaJPA();
@@ -33,6 +34,7 @@ public class TestPersistenceJPA {
 
     }
 
+    @Test
     public void testPersistenciaPeca() throws Exception {
 
         PersistenciaJPA persistencia = new PersistenciaJPA();
@@ -42,7 +44,6 @@ public class TestPersistenceJPA {
             //testar as funções sobre a entidade peça
             Peca p = new Peca();
             //p.set
-
             p.setFornecedor("Texas");
             p.setNome("BC348");
             p.setValor(3.5f);
@@ -65,12 +66,9 @@ public class TestPersistenceJPA {
                 persistencia.remover(p);
                   System.out.println("Peça removida");
                 
-            }            
-            persistencia.fecharConexao();           
+            }                 
             
         
-           
-
             
             //Exercicio 3:
             /*
@@ -88,5 +86,31 @@ public class TestPersistenceJPA {
             System.out.println("Nao abriu a conexao com o BD via JPA");
         }
 
+        
     }
+   
+/*    @Test
+    public void testPersistenciaListPeca() throws Exception {
+    
+        PersistenciaJPA persistencia = new PersistenciaJPA();
+        if(persistencia.conexaoAberta()){
+            System.out.println("testPersistenciaEndereco:");            
+            
+            List<Peca> list = persistencia.listPecas();
+            if(!list.isEmpty()){
+            
+                for(Peca end : list){
+                    
+                    System.out.println("ID: "+end.getId());
+                }
+            }
+            
+            
+            persistencia.fecharConexao();           
+        }else{
+            System.out.println("Nao abriu a conexao com o BD via JPA");
+        }        
+    }*/
+    
+    
 }
