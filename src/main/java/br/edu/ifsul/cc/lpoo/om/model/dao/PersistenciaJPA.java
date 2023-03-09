@@ -21,7 +21,7 @@ public class PersistenciaJPA implements InterfacePersistencia{
     public PersistenciaJPA(){
         
         //parametro: é o nome da unidade de persistencia (Persistence Unit)
-        factory = Persistence.createEntityManagerFactory("pu_java_lpoo_om_20231");
+        factory = Persistence.createEntityManagerFactory("br.edu.ifsul.cc.lpoo.om_java_lpoo_om_20231_jar_1.0-SNAPSHOTPU");
         entity = factory.createEntityManager();
     }
 
@@ -39,17 +39,24 @@ public class PersistenciaJPA implements InterfacePersistencia{
 
     @Override
     public Object find(Class c, Object id) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        
+       return entity.find(c, id); // encontra determinado registro
     }
 
     @Override
     public void persist(Object o) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        entity.getTransaction().begin(); // abrir transação
+        entity.persist(o); // realiaz insert ou update
+        entity.getTransaction().commit(); // comita a transação (comando sql)
+     
     }
 
     @Override
     public void remover(Object o) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+      entity.getTransaction().begin(); // abrir transação
+        entity.persist(o);
+        entity.getTransaction().commit();
+     
     }
 
     @Override

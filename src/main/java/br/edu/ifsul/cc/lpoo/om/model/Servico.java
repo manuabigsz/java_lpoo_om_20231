@@ -62,14 +62,14 @@ public class Servico implements Serializable {
     private Equipe equipe;
     
    
-    @OneToMany(mappedBy = "Pagamento")
-    private List<Pagamento> listaPagamento = new ArrayList<>();
-
+     //agregacao por composicao.
+    @OneToMany(mappedBy = "servico")//mappedBy deve apontar para a referencia de jogador dentro de Compra.
+    private List<Pagamento> pagamentos;
     
     Servico (){
     
     }
-    
+
     /**
      * @return the id
      */
@@ -169,19 +169,20 @@ public class Servico implements Serializable {
     }
 
     /**
-     * @return the listaPagamento
+     * @return the pagamentos
      */
-    public List<Pagamento> getListaPagamento() {
-        return listaPagamento;
+    public List<Pagamento> getPagamentos() {
+        return pagamentos;
     }
 
     /**
-     * @param listaPagamento the listaPagamento to set
+     * @param pagamentos the pagamentos to set
      */
-    public void setListaPagamento(List<Pagamento> listaPagamento) {
-        this.listaPagamento = listaPagamento;
+    public void setPagamentos(List<Pagamento> pagamentos) {
+        this.pagamentos = pagamentos;
     }
     
+
     
     
 }
