@@ -28,7 +28,7 @@ public class Peca implements Serializable{
     @GeneratedValue(generator = "seq_peca", strategy = GenerationType.SEQUENCE) 
     private Integer id;
     
-    @Column(nullable = false, length = 2)
+    @Column(nullable = false, length = 100)
     private String nome;
     
     @Column(nullable = false, precision = 2)
@@ -94,6 +94,15 @@ public class Peca implements Serializable{
      */
     public void setFornecedor(String fornecedor) {
         this.fornecedor = fornecedor;
+    }
+    
+    @Override
+    public String toString() {
+        return 
+                "\tId='" + id + '\'' +
+                "\t Nome='" + nome + '\'' +
+                "\t Fornecedor=" + fornecedor +
+                "\t Valor='" + valor + '\'' ;
     }
 
 }

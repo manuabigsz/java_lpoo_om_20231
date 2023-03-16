@@ -5,6 +5,7 @@
 package br.edu.ifsul.cc.lpoo.om.model;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -39,10 +40,23 @@ public class Curso implements Serializable{
     @Column(nullable = true)
     private Integer cargahoraria;
     
+    
+    
+    private SimpleDateFormat formatadorData;
+    
     public Curso(){
         
     }
 
+    
+       public String formatarData(Calendar data )
+    {
+        formatadorData = new SimpleDateFormat("dd/MM/yyy");
+
+        return  formatadorData.format(data.getTime());
+
+    }
+       
     /**
      * @return the id
      */
@@ -100,5 +114,12 @@ public class Curso implements Serializable{
     }
     
    
-
+  @Override
+    public String toString() {
+        return 
+                "\tId='" + id + '\'' +
+                "\t Descrição='" + descricao + '\'' +
+                "\t data_conclusão=" + formatarData(dt_conclusao) +
+                "\t Carga Horaria='" + cargahoraria + '\'' ;
+    }
 }

@@ -4,6 +4,7 @@
  */
 package br.edu.ifsul.cc.lpoo.om.model.dao;
 
+import br.edu.ifsul.cc.lpoo.om.model.Curso;
 import br.edu.ifsul.cc.lpoo.om.model.Funcionario;
 import br.edu.ifsul.cc.lpoo.om.model.Peca;
 import java.util.List;
@@ -16,6 +17,7 @@ import javax.persistence.Persistence;
  * @author 20212PF.CC0010
  */
 public class PersistenciaJPA implements InterfacePersistencia{
+    
     public EntityManagerFactory factory;    //fabrica de gerenciadores de entidades
     public EntityManager entity;            //gerenciador de entidades JPA
 
@@ -64,13 +66,22 @@ public class PersistenciaJPA implements InterfacePersistencia{
    @Override
     public List <Peca> listPecas() throws Exception {
     
-        return entity.createNamedQuery("Peca.getbyid").getResultList();
-        
-    }
+        return entity.createNamedQuery("Peca.getbyid").getResultList();    }
 
     @Override
     public Funcionario doLogin(String cpf, String senha) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public List<Funcionario> listFuncionario() throws Exception {
+      return entity.createNamedQuery("Funcionario.getbyid").getResultList();
+        
+    }
+
+    @Override
+    public List<Curso> listCurso() throws Exception {
+         return entity.createNamedQuery("listCurso.getbyid").getResultList();
     }
     
 
