@@ -12,6 +12,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -23,6 +25,8 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "tb_curso")
+@NamedQueries({@NamedQuery(name="Curso.getbyid", query="select c from Curso c order by c.id asc")})
+
 public class Curso implements Serializable{
 
     @Id
@@ -42,20 +46,14 @@ public class Curso implements Serializable{
     
     
     
-    private SimpleDateFormat formatadorData;
+   
     
     public Curso(){
         
     }
 
     
-       public String formatarData(Calendar data )
-    {
-        formatadorData = new SimpleDateFormat("dd/MM/yyy");
-
-        return  formatadorData.format(data.getTime());
-
-    }
+   
        
     /**
      * @return the id
@@ -119,7 +117,7 @@ public class Curso implements Serializable{
         return 
                 "\tId='" + id + '\'' +
                 "\t Descrição='" + descricao + '\'' +
-                "\t data_conclusão=" + formatarData(dt_conclusao) +
+                "\t data_conclusão=" + dt_conclusao +
                 "\t Carga Horaria='" + cargahoraria + '\'' ;
     }
 }

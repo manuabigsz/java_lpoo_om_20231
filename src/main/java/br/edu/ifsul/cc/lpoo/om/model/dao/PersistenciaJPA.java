@@ -4,6 +4,7 @@
  */
 package br.edu.ifsul.cc.lpoo.om.model.dao;
 
+import br.edu.ifsul.cc.lpoo.om.model.Cargo;
 import br.edu.ifsul.cc.lpoo.om.model.Curso;
 import br.edu.ifsul.cc.lpoo.om.model.Funcionario;
 import br.edu.ifsul.cc.lpoo.om.model.Peca;
@@ -81,9 +82,15 @@ public class PersistenciaJPA implements InterfacePersistencia{
 
     @Override
     public List<Curso> listCurso() throws Exception {
-         return entity.createNamedQuery("listCurso.getbyid").getResultList();
+         return entity.createNamedQuery("Curso.getbyid").getResultList();
     }
-    
+
+    @Override
+    public List<Cargo> listCargo() throws Exception {
+       return entity.createNamedQuery("Cargo.getbyid").getResultList();
+    }
+
+
 
    
     

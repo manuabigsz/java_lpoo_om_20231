@@ -15,6 +15,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -26,6 +28,7 @@ import javax.persistence.TemporalType;
 @Entity
 @DiscriminatorValue("F")
 @Table(name = "tb_funcionario")
+@NamedQueries({@NamedQuery(name="Funcionario.getbyid", query="select f from Funcionario f order by f.id asc")})
 
 public class Funcionario extends Pessoa {
 

@@ -4,6 +4,7 @@
  */
 package br.edu.ifsul.cc.om.test;
 
+import br.edu.ifsul.cc.lpoo.om.model.Cargo;
 import br.edu.ifsul.cc.lpoo.om.model.Curso;
 import br.edu.ifsul.cc.lpoo.om.model.Funcionario;
 import br.edu.ifsul.cc.lpoo.om.model.Peca;
@@ -21,7 +22,7 @@ import org.junit.Test;
  */
 public class TestPersistenceJPA {
 
-   //@Test
+    //@Test
     public void testConexaoGeracaoTabelas() {
 
         PersistenciaJPA persistencia = new PersistenciaJPA();
@@ -37,26 +38,23 @@ public class TestPersistenceJPA {
         }
 
     }
-    
-    
-    
+
     //@Test
     public void testPersistenciaPeca() throws Exception {
 
         PersistenciaJPA persistencia = new PersistenciaJPA();
         if (persistencia.conexaoAberta()) {
             System.out.println("testPersistenciaPeca");
-   
+
             Peca p = new Peca();
-            
-            p.setId(6);
+
             p.setFornecedor("Texas");
             p.setNome("BC348");
             p.setValor(3.5f);
 
-            
             persistencia.persist(p);
 
+            System.out.println("Inseriu a peca id=" + p.getId());
             persistencia.fecharConexao();
 
             System.out.println("fechou a conexao com o BD via JPA");
@@ -83,14 +81,15 @@ public class TestPersistenceJPA {
             if (p == null) {
                 System.out.println("nao encontrou o id =1");
                 p = new Peca();
-                p.setFornecedor("Texas");
-                p.setNome("BC348");
-                p.setValor(3.5f);
-                //encaminhar o e
+                p.setFornecedor("fornecedor de teste");
+                p.setNome("biela");
+                p.setValor(100f);
                 persistencia.persist(p);
+
             } else {
                 System.out.println("encontrou o id=1 para endereco " + p.getId());
                 persistencia.remover(p);
+                System.out.println("Removeu a peca id=" + p.getId());
             }
             persistencia.fecharConexao();
         } else {
@@ -104,7 +103,7 @@ public class TestPersistenceJPA {
         Passo 2: se a lista.size() > 0 listar e remover.
         Passo 3: se a lista.size() == 0 inserir duas Peças.
      */
-    @Test
+    //@Test
     public void testPersistenciaListPeca() throws Exception {
 
         PersistenciaJPA persistencia = new PersistenciaJPA();
@@ -119,10 +118,10 @@ public class TestPersistenceJPA {
                     System.out.println("Peca \n" + p);
                 }
             }
-            if (list.size() > 0) {
+            else if (list.size() > 0) {
                 for (Peca p : list) {
 
-                     System.out.println("Peca \n" + p);
+                    System.out.println("Peca \n" + p);
                     persistencia.remover(p);
                 }
 
@@ -155,7 +154,7 @@ public class TestPersistenceJPA {
             Passo 2: se a lista.size() > 0 listar e remover o funcionário.
             Passo 3: se a lista.size() == 0 inserir um funcionário e associar cursos..
      */
-   //@Test
+    @Test
     public void testPersistenciaListFuncionario() throws Exception {
 
         PersistenciaJPA persistencia = new PersistenciaJPA();
@@ -173,7 +172,7 @@ public class TestPersistenceJPA {
                             + "\t CPF: " + f.getCpf() + "\tCEP: " + f.getCep()
                             + "\tNome: " + f.getNome() + "\t Senha: " + f.getSenha()
                             + "\t Data nascimento: " + f.getData_nascimento()
-                            + "\t Complemento: " + f.getComplemento()
+                            + "\t Complemento: " + f.getComplemento() + "\t Cargo: " + f.getCargo().getDescricao() 
                             + "Cursos: " + f.getCurso());
 
                 }
@@ -186,8 +185,8 @@ public class TestPersistenceJPA {
                             + "\t CPF: " + f.getCpf() + "\tCEP: " + f.getCep()
                             + "\tNome: " + f.getNome() + "\t Senha: " + f.getSenha()
                             + "\t Data nascimento: " + f.getData_nascimento()
-                            + "\t Complemento: " + f.getComplemento()
-                            + "Cursos: " + f.getCurso());
+                            + "\t Complemento: " + f.getComplemento() 
+                            + "\t Cargo: " + f.getCargo().getDescricao() +  "Cursos: " + f.getCurso());
                     persistencia.remover(f);
 
                 }
@@ -195,8 +194,9 @@ public class TestPersistenceJPA {
             } else {
                 Funcionario f = new Funcionario();
                 List<Curso> listaC = persistencia.listCurso();
+                 List<Cargo> listaCar = persistencia.listCargo();
                 Curso c = new Curso();
-                SimpleDateFormat formataData = new SimpleDateFormat("dd/MM/yyy");
+                Cargo car = new Cargo();
                 Calendar dataAdm = null;
                 Calendar dataNas = null;
                 Calendar dataC = null;
@@ -216,7 +216,6 @@ public class TestPersistenceJPA {
                     dataC = Calendar.getInstance();
                     dataC.setTimeInMillis(simpleDateFormat.parse(dataCurso).getTime());
 
-                    
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -230,18 +229,38 @@ public class TestPersistenceJPA {
                 f.setData_nascimento(dataNas);
                 f.setCep("99876542");
                 f.setComplemento("Shopping");
-                
+                f.setNumero("1234214");
+               
                 c.setId(1);
                 c.setDescricao("Curso de Java");
                 c.setDt_conclusao(dataC);
                 c.setCargahoraria(5);
                 listaC.add(c);
                 f.setCurso(listaC);
+                
+              
+                //cria um novo cargo ou retorna o primeiro.
+                 f.setCargo(getCargo(persistencia));
+                
                 persistencia.persist(f);
 
             }
         } else {
             System.out.println("Nao abriu a conexao com o BD via JPA");
+        }
+    }
+    
+    private Cargo getCargo(PersistenciaJPA jpa) throws Exception{
+    
+        List<Cargo> list = jpa.listCargo();
+        if(list.isEmpty()){
+            Cargo c = new Cargo();
+            c.setId(1);
+            c.setDescricao("FUNCIONARIO");
+            
+            return c;
+        }else{
+            return list.get(0);
         }
     }
 

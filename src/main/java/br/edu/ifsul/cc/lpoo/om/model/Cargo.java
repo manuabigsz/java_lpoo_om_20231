@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -19,6 +21,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "tb_cargo")
+@NamedQueries({@NamedQuery(name="Cargo.getbyid", query="select car from Cargo car order by car.id asc")})
 public class Cargo implements Serializable{
 
     @Id
@@ -61,4 +64,10 @@ public class Cargo implements Serializable{
         this.descricao = descricao;
     }
 
+     @Override
+    public String toString() {
+        return 
+                "\tId='" + id + '\'' +
+                "\t Descrição='" + descricao + '\'';
+    }
 }
