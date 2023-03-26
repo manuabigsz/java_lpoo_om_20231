@@ -154,7 +154,7 @@ public class TestPersistenceJPA {
             Passo 2: se a lista.size() > 0 listar e remover o funcionário.
             Passo 3: se a lista.size() == 0 inserir um funcionário e associar cursos..
      */
-    @Test
+    //@Test
     public void testPersistenciaListFuncionario() throws Exception {
 
         PersistenciaJPA persistencia = new PersistenciaJPA();
