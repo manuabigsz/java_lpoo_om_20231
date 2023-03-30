@@ -154,7 +154,7 @@ public class TestPersistenceJPA {
             Passo 2: se a lista.size() > 0 listar e remover o funcionário.
             Passo 3: se a lista.size() == 0 inserir um funcionário e associar cursos..
      */
-    //@Test
+   // @Test
     public void testPersistenciaListFuncionario() throws Exception {
 
         PersistenciaJPA persistencia = new PersistenciaJPA();
@@ -231,11 +231,8 @@ public class TestPersistenceJPA {
                 f.setComplemento("Shopping");
                 f.setNumero("1234214");
                
-                c.setId(1);
-                c.setDescricao("Curso de Java");
-                c.setDt_conclusao(dataC);
-                c.setCargahoraria(5);
-                listaC.add(c);
+                
+                 listaC.add(getCurso(persistencia));
                 f.setCurso(listaC);
                 
               
@@ -252,16 +249,36 @@ public class TestPersistenceJPA {
     
     private Cargo getCargo(PersistenciaJPA jpa) throws Exception{
     
-        List<Cargo> list = jpa.listCargo();
+         List<Cargo> list = jpa.listCargo();
         if(list.isEmpty()){
             Cargo c = new Cargo();
-            c.setId(1);
-            c.setDescricao("FUNCIONARIO");
+            c.setDescricao("Mecanico Master");
+            jpa.persist(c);
             
             return c;
         }else{
+            
             return list.get(0);
         }
     }
 
+     private Curso getCurso(PersistenciaJPA jpa) throws Exception {
+        
+        List<Curso> list = jpa.listCurso();
+        if(list.isEmpty()){
+            Curso c = new Curso();
+            c.setDescricao("curso de mecanico");
+            c.setCargahoraria(100);
+            jpa.persist(c);
+            
+            return c;
+        }else{
+            
+            return list.get(0);
+        }
+        
+    }
+    
+    
 }
+
