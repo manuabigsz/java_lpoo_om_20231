@@ -2,8 +2,10 @@ package br.edu.ifsul.cc.om.test;
 
 import br.edu.ifsul.cc.lpoo.om.model.Cargo;
 import br.edu.ifsul.cc.lpoo.om.model.Curso;
+import br.edu.ifsul.cc.lpoo.om.model.Funcionario;
 import br.edu.ifsul.cc.lpoo.om.model.Peca;
 import br.edu.ifsul.cc.lpoo.om.model.dao.PersistenciaJDBC;
+import java.util.List;
 import org.junit.Test;
 
 /**
@@ -35,36 +37,54 @@ public class TestPersistenceJBDC {
 
     }
 
-   //@Test
+    //@Test
     public void testPersistenciaPeca() throws Exception {
-        
+
         PersistenciaJDBC jdbc = new PersistenciaJDBC();
-        
+
         if (jdbc.conexaoAberta()) {
             System.out.println("conectou no BD via JDBC ...");
 
             //chama o método find da classe PersistencaiJDBC
             //modelo o retorno de Object para Peca
-            Peca p = (Peca) jdbc.find(Peca.class, 12);
+            Peca p = (Peca) jdbc.find(Peca.class, 15);
+
             if (p == null) {
-                System.out.println("Não encontrou a peca 12");
+                System.out.println("Não encontrou a peca ");
+
+                p = new Peca();
+
+                p.setFornecedor("fornecedor de peca");
+                p.setNome("correia");
+                p.setValor(250.0f);
+
+                jdbc.persist(p);
+
+                System.out.println("Inseriu a peça " + p.getId());
+
             } else {
                 System.out.println("Encontrou a peca: " + p.getId() + ", nome: " + p.getNome());
+                p.setNome("nome alterado");
+                jdbc.persist(p);
+                
+                System.out.println("Alterou a peça: " + p.getId());
+                
+                System.out.println("Removendo a peca: " + p.getId());
+                jdbc.remover(p);
             }
 
             jdbc.fecharConexao();
         } else {
             System.out.println("nao conectou no BD via JDBC ...");
-
         }
 
     }
-    
-  //@Test
+
+    //@Test
     public void testPersistenciaCurso() throws Exception {
-        
+
         PersistenciaJDBC jdbc = new PersistenciaJDBC();
-        
+
         if (jdbc.conexaoAberta()) {
             System.out.println("conectou no BD via JDBC ...");
 
@@ -83,13 +103,12 @@ public class TestPersistenceJBDC {
 
         }
     }
-    
-    
+
     // @Test
     public void testPersistenciaCargo() throws Exception {
-        
+
         PersistenciaJDBC jdbc = new PersistenciaJDBC();
-        
+
         if (jdbc.conexaoAberta()) {
             System.out.println("conectou no BD via JDBC ...");
 
@@ -109,5 +128,108 @@ public class TestPersistenceJBDC {
         }
 
     }
+    
+    
+    /*
+    Atividade prática 13_04_23
+    recuperar lista de peças
+    se a lista nao estiver vazia, percorrer e imprimir o id
+    de cada peca e remover.
+    se a lista estiver vazia, criar uma peça
+    */
+   //@Test
+    public void testPersistenciaListaPeca() throws Exception {
 
+        PersistenciaJDBC jdbc = new PersistenciaJDBC();
+
+        if (jdbc.conexaoAberta()) {
+            
+             List<Peca> lista = jdbc.listPecas();
+            
+            if(!lista.isEmpty()){
+            
+                for(Peca p : lista){
+
+                    System.out.println("Peca: "+p.getId()+" Nome: "+p.getNome());
+                                        
+                    jdbc.remover(p);
+                }
+
+            }else{
+                
+                System.out.println("Não encontrou o patente");
+                
+                Peca p = new Peca();
+                
+                p.setFornecedor("fornecedor de peca");
+                p.setNome("correia");
+                p.setValor(250.0f);
+                
+                jdbc.persist(p); //insert na tabela.                
+                System.out.println("Cadastrou a Peca "+p.getId());
+
+                
+           
+                System.out.println("Cadastrou a Peca "+p.getId());
+                
+            }
+            
+            jdbc.fecharConexao();
+         
+            
+        }else{
+              System.out.println("Não conectou no BD via JDBC ...");
+
+            
+        }
+    
+    }
+    
+    //@Test
+    public void testPersistenciaListFuncionario() throws Exception {
+    
+    /*
+       ##### Exercicio de Preparação para a Avaliação ####
+      1) Recuperar a lista de Funcionarios com seus respectivos cursos.
+      2) Se a lista não for vazia, imprimir cpf e cargo de cada funcionario 
+            e os seus respectivos cursos (descrição), alterá-lo (cargo) e remove-lo.
+      3) Se a lista estiver vazia, cadastrar um novo funcionario e associar um curso.
+    */
+    
+    PersistenciaJDBC jdbc = new PersistenciaJDBC();
+
+        if (jdbc.conexaoAberta()) {
+            
+             List<Funcionario> lista = jdbc.listFuncionario();
+            
+            if(!lista.isEmpty()){
+            
+                for(Funcionario f: lista){
+
+                    System.out.println("CPF: "+f.getCpf()+" Cursos: "+f.getCurso());
+                                        
+                    jdbc.remover(f);
+                }
+
+            }else{
+                
+                System.out.println("Não encontrou o patente");
+                
+                Peca p = new Peca();
+                
+                p.setFornecedor("fornecedor de peca");
+                p.setNome("correia");
+                p.setValor(250.0f);
+                
+                jdbc.persist(p); //insert na tabela.                
+                System.out.println("Cadastrou a Peca "+p.getId());
+
+                
+           
+                System.out.println("Cadastrou a Peca "+p.getId());
+                
+            }
+            
+            jdbc.fecharConexao();
+    }
 }

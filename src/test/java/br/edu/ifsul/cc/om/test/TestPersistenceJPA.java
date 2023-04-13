@@ -47,7 +47,7 @@ public class TestPersistenceJPA {
             System.out.println("testPersistenciaPeca");
 
             Peca p = new Peca();
-
+            
             p.setFornecedor("Texas");
             p.setNome("BC348");
             p.setValor(3.5f);
