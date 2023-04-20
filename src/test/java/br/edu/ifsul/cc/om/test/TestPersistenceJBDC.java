@@ -104,7 +104,7 @@ public class TestPersistenceJBDC {
         }
     }
 
-    // @Test
+    //@Test
     public void testPersistenciaCargo() throws Exception {
 
         PersistenciaJDBC jdbc = new PersistenciaJDBC();
@@ -185,7 +185,7 @@ public class TestPersistenceJBDC {
     
     }
     
-    //@Test
+    @Test
     public void testPersistenciaListFuncionario() throws Exception {
     
     /*
@@ -200,36 +200,66 @@ public class TestPersistenceJBDC {
 
         if (jdbc.conexaoAberta()) {
             
-             List<Funcionario> lista = jdbc.listFuncionario();
+             List<Funcionario> listaF = jdbc.listFuncionario();
             
-            if(!lista.isEmpty()){
+            if(!listaF.isEmpty()){
             
-                for(Funcionario f: lista){
+                for(Funcionario f : listaF){
 
-                    System.out.println("CPF: "+f.getCpf()+" Cursos: "+f.getCurso());
+                    System.out.println("\nCPF: "+f.getCpf()+" Cargo: "+f.getCargo());
                                         
                     jdbc.remover(f);
+                    
+                     for(Curso c: f.getCurso()){
+                         
+                    System.out.println("\nCurso Descricao: "+c.getDescricao());
+                     }
                 }
+               
 
             }else{
-                
-                System.out.println("Não encontrou o patente");
-                
-                Peca p = new Peca();
-                
-                p.setFornecedor("fornecedor de peca");
-                p.setNome("correia");
-                p.setValor(250.0f);
-                
-                jdbc.persist(p); //insert na tabela.                
-                System.out.println("Cadastrou a Peca "+p.getId());
-
-                
-           
-                System.out.println("Cadastrou a Peca "+p.getId());
+                System.out.println("Não encontrou funcionarios");
                 
             }
             
             jdbc.fecharConexao();
+         
+            
+        }else{
+              System.out.println("Não conectou no BD via JDBC ...");
+
+            
+        }
     }
 }
+
+    
+   
+    
+  
+//test
+/*
+  public void testPersistenciaFuncionarioFind() throws Exception {
+
+         PersistenciaJDBC jdbc = new PersistenciaJDBC();
+
+        if (jdbc.conexaoAberta()) {
+            System.out.println("conectou no BD via JDBC ...");
+
+            //chama o método find da classe PersistencaiJDBC
+            //modelo o retorno de Object para Peca
+            Funcionario f = (Funcionario) jdbc.find(Funcionario.class, "123125125");
+            if (f == null) {
+                System.out.println("Não encontrou o funcionario com cpf informado");
+            } else {
+                System.out.println("Encontrou o funcionario: " + f.getCpf());
+            }
+
+            jdbc.fecharConexao();
+        } else {
+            System.out.println("nao conectou no BD via JDBC ...");
+
+        }
+
+    }
+    */

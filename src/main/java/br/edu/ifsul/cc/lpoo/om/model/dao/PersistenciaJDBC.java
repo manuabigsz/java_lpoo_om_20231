@@ -93,13 +93,90 @@ public class PersistenciaJDBC implements InterfacePersistencia {
         } else if (c == Funcionario.class) {
             //select na tb_pessoa e tb_funcionario
 
-            PreparedStatement ps = this.con.prepareStatement("select id, cargahoraria, descricao, dt_conclusao from tb_curso where id = ?");
+            PreparedStatement ps = this.con.prepareStatement("select "
+                    + "f.data_admissao, "
+                    + "f.data_demissao,"
+                    + "f.numero_ctps, "
+                    + "f.cpf, "
+                    + "f.cargo,"
+                    + "p.tipo,p.cpf,"
+                    + "p.cep,"
+                    + "p.complemento,"
+                    + "p.data_nascimento, "
+                    + "p.nome,"
+                    + "p.numero,"
+                    + "p.senha\n"
+                    + "from tb_funcionario f, tb_pessoa p "
+                    + "where f.cpf=p.cpf;");
 
             ps.setInt(1, Integer.valueOf(id.toString()));
 
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
+                Funcionario f = new Funcionario();
 
+                if (rs.getDate("data_admissao") != null) {
+
+                    Calendar cData = Calendar.getInstance();
+                    cData.setTimeInMillis(rs.getDate("data_admissao").getTime());
+                    f.setData_admissao(cData);
+                }
+
+                if (rs.getDate("data_admissao") != null) {
+                    Calendar cDataFinal = Calendar.getInstance();
+                    cDataFinal.setTimeInMillis(rs.getDate("data_demissao").getTime());
+                    f.setData_demissao(cDataFinal);
+                }
+
+                f.setNumero_ctps(rs.getString("numero_ctps"));
+
+                f.setCpf(rs.getString("cpf"));
+
+                Cargo car = new Cargo();
+                car.setDescricao(rs.getString("descricao"));
+                f.setCargo(car);
+
+                f.setCep(rs.getString("cep"));
+                f.setComplemento(rs.getString("complemento"));
+
+                if (rs.getDate("data_nascimento") != null) {
+                    Calendar cDataNasc = Calendar.getInstance();
+                    cDataNasc.setTimeInMillis(rs.getDate("data_nascimento").getTime());
+                    f.setData_nascimento(cDataNasc);
+                }
+
+                f.setNome(rs.getString("nome"));
+
+                f.setNumero(rs.getString("numero"));
+
+                f.setSenha(rs.getString("senha"));
+
+                rs.close(); //fecha o curso do bd para essa consulta
+
+                PreparedStatement psCursos
+                        = this.con.prepareStatement("select c.descricao, c.id "
+                                + "from tb_funcionario f, tb_curso c, tb_funcionario_curso fc"
+                                + "where f.cpf=fc.pessoa_cpf and c.id=fc.curso_id");
+
+                ResultSet rsCursos = psCursos.executeQuery();
+                List<Curso> listCursos = new ArrayList();
+                while (rsCursos.next()) {
+                    //criar um objeto do tipo curso
+                    //setar a descricao e o id do curso
+                    //adicionar o curso na lista
+                    Curso crs = new Curso();
+                    crs.setDescricao(rs.getString("descricao"));
+                    crs.setId(rs.getInt("id"));//recupera pelo nome da coluna
+
+                    listCursos.add(crs);
+
+                }
+
+                f.setCurso(listCursos);
+
+                rsCursos.close();
+
+                return f; // retorna o objetio do tipo pessoa
             }
 
         } else if (c == Curso.class) {
@@ -118,9 +195,11 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                 cur.setDescricao(rs.getString("descricao"));
 
                 //Conversão de Calendar para data:
-                /*Calendar cData = Calendar.getInstance();
-               cData.setTimeInMillis(rs.getDate("dt_conclusao").getTime());
-               cur.setDt_conclusao(cData);*/
+                if (rs.getDate("dt_conclusao") != null) {
+                    Calendar cData = Calendar.getInstance();
+                    cData.setTimeInMillis(rs.getDate("dt_conclusao").getTime());
+                    cur.setDt_conclusao(cData);
+                }
                 //c.setDt_conclusao(rs.getDate("dt_conclusao"));
                 rs.close(); //fecha o curso do bd para essa consulta
 
@@ -153,17 +232,18 @@ public class PersistenciaJDBC implements InterfacePersistencia {
     public void persist(Object o) throws Exception {//recebe object
         if (o instanceof Peca) { //descobrir instancia do objeto, se o for uma peça
             //faz conversão(casting "modela") de object para peça
-
             Peca p = (Peca) o;
-
             //testa para descobrir se existe informação na chave primaria
             if (p.getId() == null) {
                 //insert into tb_peca...
 
-                PreparedStatement ps = this.con.prepareStatement("insert into tb_peca (id,fornecedor,"
-                        + "nome, valor) "
+                PreparedStatement ps = this.con.prepareStatement("insert into tb_peca (id,"
+                        + "fornecedor,"
+                        + "nome, "
+                        + "valor) "
                         + "values (nextval('seq_peca_id'), "
-                        + "?, ?, "
+                        + "?, "
+                        + "?, "
                         + "?);");
                 //seta parametros.
                 ps.setString(1, p.getFornecedor()); //seta fornecedor, do tipo vchar, com indice 1, e pega o forncedor
@@ -200,8 +280,33 @@ public class PersistenciaJDBC implements InterfacePersistencia {
         } else if (o instanceof Cargo) {
             Cargo c = (Cargo) o;
             if (c.getId() == null) {
+                //insert into tb_peca...
 
+                PreparedStatement ps = this.con.prepareStatement("insert into tb_cargo ("
+                        + "descricao) "
+                        + "values (nextval('seq_cargo'), "
+                        + "?);");
+                //seta parametros.
+
+                //executa o insert
+                ps.execute();
+
+                //fecha o cursor
+                ps.close();
             } else {
+                //update tb_peca set..
+
+                PreparedStatement ps = this.con.prepareStatement("update tb_peca "
+                        + "set descricao = ?, "
+                        + "where id=?");
+
+                //seta parametros.
+                ps.setString(1, c.getDescricao()); //seta fornecedor, do tipo vchar, com indice 1, e pega o forncedor
+                //executa o insert
+                ps.execute();
+
+                //fecha o cursor
+                ps.close();
 
             }
         } else if (o instanceof Funcionario) {
@@ -210,6 +315,20 @@ public class PersistenciaJDBC implements InterfacePersistencia {
             //utiliza data_admissao, pois será gerada pelo próprio BD.
             //nesse caso, quando não houver data_admissao sera realizada insert.
             if (f.getData_admissao() == null) {
+                PreparedStatement ps = this.con.prepareStatement("insert into tb_funcionario ("
+                        + "data_admissao"
+                        + ",data_demissao,"
+                        + "numero_ctps, "
+                        + "cpf, "
+                        + "cargo) values ?,?,?,?,?");
+
+                //seta parametros.
+                // ps.setDate(1, f.getData_admissao()); //seta fornecedor, do tipo vchar, com indice 1, e pega o forncedor
+                //executa o insert
+                ps.execute();
+
+                //fecha o cursor
+                ps.close();
 
             } else {
 
@@ -227,119 +346,173 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                     + "where id = ?;");
 
             ps.setInt(1, p.getId());
-
             //executa
             ps.execute();
-
             //fecha o cursor
             ps.close();
 
         } else if (o instanceof Cargo) {
             Cargo c = (Cargo) o;
+            PreparedStatement ps = this.con.prepareStatement("delete from tb_cargo "
+                    + "where id = ?;");
+            ps.setInt(1, c.getId());
+            //executa
+            ps.execute();
+            //fecha o cursor
+            ps.close();
 
         } else if (o instanceof Funcionario) {
             Funcionario f = (Funcionario) o;
+
+            PreparedStatement ps = this.con.prepareStatement("delete from tb_funcionario "
+                    + "where cpf = ?;");
+            ps.setString(1, f.getCpf());
+            //executa
+            ps.execute();
+            //fecha o cursor
+            ps.close();
         }
     }
 
     @Override
     public List<Peca> listPecas() throws Exception {
 
-         List<Peca> listagemRetorno;
-        
+        List<Peca> listagemRetorno;
+
         //select na tb_peca
-        PreparedStatement ps = 
-                this.con.prepareStatement("select "
-                                                + "id, "
-                                                + "fornecedor, "
-                                                + "nome, "
-                                                + "valor "
-                                                + "from tb_peca "
-                                                + "order by id asc ");
-               
+        PreparedStatement ps
+                = this.con.prepareStatement("select "
+                        + "id, "
+                        + "fornecedor, "
+                        + "nome, "
+                        + "valor "
+                        + "from tb_peca "
+                        + "order by id asc ");
+
         //executa o comando SQL (select)
         ResultSet rs = ps.executeQuery();
-        
+
         listagemRetorno = new ArrayList();
-        
+
         //o método next recupera a proxima linha do resultado,
         //se exitir uma linha retorna verdadeiro
         //se nao existir uma linha retorna false.
-        while(rs.next()){
+        while (rs.next()) {
 
             Peca p = new Peca();
-                p.setId(rs.getInt("id"));//recupera pelo nome da coluna
-                p.setNome(rs.getString("nome"));
-                p.setFornecedor(rs.getString("fornecedor"));
-                p.setValor(rs.getFloat("valor"));
+            p.setId(rs.getInt("id"));//recupera pelo nome da coluna
+            p.setNome(rs.getString("nome"));
+            p.setFornecedor(rs.getString("fornecedor"));
+            p.setValor(rs.getFloat("valor"));
 
-            listagemRetorno.add(p);     
-            
+            listagemRetorno.add(p);
+
         }
-        
+
         rs.close();//fecha o cursor do BD para essa consulta
-        
+
         return listagemRetorno;//retorna a lista.
 
     }
 
     @Override
     public List<Funcionario> listFuncionario() throws Exception {
-     List<Funcionario> listagemRetorno;
-        
+        List<Funcionario> listagemRetorno;
+
         //select na tb_peca
-        PreparedStatement ps = 
-                this.con.prepareStatement("select "
-                        + "data_admissao,"
-                        + "data_demissao,"
-                        + "numero_ctps,"
-                        + "cpf,"
-                        + "cargo "
-                        + "from tb_funcionario "
-                        + "order by data_admissao asc; ");
-               
+        PreparedStatement ps
+                = this.con.prepareStatement("select "
+                        + "f.data_admissao, "
+                        + "f.data_demissao, "
+                        + "f.numero_ctps, "
+                        + "f.cpf,"
+                        + " f.cargo, "
+                        + "p.tipo,"
+                        + "p.cpf,"
+                        + "p.cep,"
+                        + "p.complemento,"
+                        + "p.data_nascimento,"
+                        + " p.nome,"
+                        + "p.numero,"
+                        + "p.senha "
+                        + "from tb_funcionario f, tb_pessoa p where f.cpf=p.cpf;");
+
         //executa o comando SQL (select)
         ResultSet rs = ps.executeQuery();
-        
+
         listagemRetorno = new ArrayList();
-        
+
         //o método next recupera a proxima linha do resultado,
         //se exitir uma linha retorna verdadeiro
         //se nao existir uma linha retorna false.
-        while(rs.next()){
+        while (rs.next()) {
 
             Funcionario f = new Funcionario();
-            Cargo c = new Cargo();
-            
-            Calendar dtAdms = Calendar.getInstance();
-            dtAdms.setTimeInMillis(rs.getDate("data_cadastro").getTime());                        
-            f.setData_admissao(dtAdms);
-            
-           
-            f.setData_demissao(null);
-            f.setNumero_ctps("1234567");
-            f.setCpf("43456787698");
-            
-            c.setId(3);
-            c.setDescricao("Mecanico junior");
-            f.setCargo(c);
-            
-          Curso curso = new Curso();
-          curso.setDt_conclusao(null);
-          curso.setDescricao("Curso de Engrenagens");
-          List<Curso> listaCurso = new ArrayList();
-          listaCurso.add(curso);
+
+            if (rs.getDate("data_admissao") != null) {
+
+                Calendar cData = Calendar.getInstance();
+                cData.setTimeInMillis(rs.getDate("data_admissao").getTime());
+                f.setData_admissao(cData);
+            }
+
+            if (rs.getDate("data_demissao") != null) {
+                Calendar cDataFinal = Calendar.getInstance();
+                cDataFinal.setTimeInMillis(rs.getDate("data_demissao").getTime());
+                f.setData_demissao(cDataFinal);
+            }
+
+            f.setNumero_ctps(rs.getString("numero_ctps"));
+
+            f.setCpf(rs.getString("cpf"));
+
+            Cargo car = new Cargo();
+            car.setDescricao(rs.getString("descricao"));
+            f.setCargo(car);
+
+            f.setCep(rs.getString("cep"));
+            f.setComplemento(rs.getString("complemento"));
+
+            if (rs.getDate("data_nascimento") != null) {
+                Calendar cDataNasc = Calendar.getInstance();
+                cDataNasc.setTimeInMillis(rs.getDate("data_nascimento").getTime());
+                f.setData_nascimento(cDataNasc);
+            }
+
+            f.setNome(rs.getString("nome"));
+
+            f.setNumero(rs.getString("numero"));
+
+            f.setSenha(rs.getString("senha"));
+
+            PreparedStatement psCursos
+                    = this.con.prepareStatement("select c.descricao, c.id "
+                            + "from tb_funcionario f, tb_curso c, tb_funcionario_curso fc"
+                            + "where f.cpf=fc.pessoa_cpf and c.id=fc.curso_id");
+
+            ResultSet rsCursos = psCursos.executeQuery();
+            List<Curso> listCursos = new ArrayList();
+            while (rsCursos.next()) {
+                //criar um objeto do tipo curso
+                //setar a descricao e o id do curso
+                //adicionar o curso na lista
+                Curso crs = new Curso();
+                crs.setDescricao(rsCursos.getString("descricao"));
+                crs.setId(rsCursos.getInt("id"));//recupera pelo nome da coluna
+
+                listCursos.add(crs);
+
+            }
+            rsCursos.close();
           
-          f.setCurso(listaCurso);
-            
-            
-            listagemRetorno.add(f);     
-            
+            f.setCurso(listCursos);
+            listagemRetorno.add(f);
         }
-        
+
         rs.close();//fecha o cursor do BD para essa consulta
-        
+
         return listagemRetorno;//retorna a lista.
+
     }
 
     @Override
