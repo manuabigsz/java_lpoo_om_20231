@@ -5,6 +5,9 @@ import br.edu.ifsul.cc.lpoo.om.model.Curso;
 import br.edu.ifsul.cc.lpoo.om.model.Funcionario;
 import br.edu.ifsul.cc.lpoo.om.model.Peca;
 import br.edu.ifsul.cc.lpoo.om.model.dao.PersistenciaJDBC;
+import br.edu.ifsul.cc.lpoo.om.model.dao.PersistenciaJPA;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import org.junit.Test;
 
@@ -185,7 +188,7 @@ public class TestPersistenceJBDC {
     
     }
     
-    @Test
+   @Test
     public void testPersistenciaListFuncionario() throws Exception {
     
     /*
@@ -218,8 +221,52 @@ public class TestPersistenceJBDC {
                
 
             }else{
-                System.out.println("Não encontrou funcionarios");
-                
+                Funcionario f = new Funcionario();
+                List<Curso> listaC = jdbc.listCurso();
+                 List<Cargo> listaCar = jdbc.listCargo();
+                Curso c = new Curso();
+                Cargo car = new Cargo();
+                Calendar dataAdm = null;
+                Calendar dataNas = null;
+                Calendar dataC = null;
+
+                try {
+                    String dataAdmi = "01/05/2020";
+                    String dataNasci = "02/05/1999";
+                    String dataCurso = "25/05/2021";
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyy");
+
+                    dataAdm = Calendar.getInstance();
+                    dataAdm.setTimeInMillis(simpleDateFormat.parse(dataAdmi).getTime());
+
+                    dataNas = Calendar.getInstance();
+                    dataNas.setTimeInMillis(simpleDateFormat.parse(dataNasci).getTime());
+
+                    dataC = Calendar.getInstance();
+                    dataC.setTimeInMillis(simpleDateFormat.parse(dataCurso).getTime());
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                f.setNumero_ctps("1234");
+                f.setData_admissao(dataAdm);
+                f.getData_demissao();
+                f.setCpf("123125125");
+                f.setNome("Joao");
+                f.setSenha("senha123");
+                f.setData_nascimento(dataNas);
+                f.setCep("99876542");
+                f.setComplemento("Shopping");
+                f.setNumero("1234214");
+               
+                 listaC.add(getCurso(jdbc));
+                 f.setCurso(listaC);
+
+                //cria um novo cargo ou retorna o primeiro.
+                 f.setCargo(getCargo(jdbc));
+       
+                jdbc.persist(f); //insert na tabela.      
             }
             
             jdbc.fecharConexao();
@@ -231,15 +278,41 @@ public class TestPersistenceJBDC {
             
         }
     }
-}
+    
+  private Cargo getCargo(PersistenciaJDBC jdbc) throws Exception{
+    
+         List<Cargo> list = jdbc.listCargo();
+        if(list.isEmpty()){
+            Cargo c = new Cargo();
+            c.setDescricao("Mecanico Master");
+            jdbc.persist(c);
+            
+            return c;
+        }else{
+            
+            return list.get(0);
+        }
+    }
 
+     private Curso getCurso(PersistenciaJDBC jdbc) throws Exception {
+        
+        List<Curso> list = jdbc.listCurso();
+        if(list.isEmpty()){
+            Curso c = new Curso();
+            c.setDescricao("curso de mecanico");
+            c.setCargahoraria(100);
+            jdbc.persist(c);
+            
+            return c;
+        }else{
+            
+            return list.get(0);
+        }
+        
+    }
     
-   
-    
-  
-//test
-/*
-  public void testPersistenciaFuncionarioFind() throws Exception {
+   // @Test
+     public void testPersistenciaFuncionarioFind() throws Exception {
 
          PersistenciaJDBC jdbc = new PersistenciaJDBC();
 
@@ -262,4 +335,14 @@ public class TestPersistenceJBDC {
         }
 
     }
+    
+}
+
+    
+   
+    
+  
+//test
+/*
+ 
     */
