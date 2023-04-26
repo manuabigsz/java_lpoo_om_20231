@@ -400,13 +400,23 @@ public class PersistenciaJDBC implements InterfacePersistencia {
         } else if (o instanceof Funcionario) {
             Funcionario f = (Funcionario) o;
 
+            PreparedStatement psP = this.con.prepareStatement("delete from tb_pessoa "
+                    + "where cpf = ?;");
+              psP.setString(1, f.getCpf());
+              
+              
+              PreparedStatement psC = this.con.prepareStatement("delete from tb_funcionario_curso "
+                    + "where pessoa_cpf = ?;");
+              psC.setString(1, f.getCpf());
+              
             PreparedStatement ps = this.con.prepareStatement("delete from tb_funcionario "
                     + "where cpf = ?;");
             ps.setString(1, f.getCpf());
             
-             PreparedStatement psC = this.con.prepareStatement("delete from tb_funcionario_curso "
-                    + "where pessoa_cpf = ?;");
-              psC.setString(1, f.getCpf());
+            
+            
+            
+             
             //executa
             ps.execute();
             //fecha o cursor
