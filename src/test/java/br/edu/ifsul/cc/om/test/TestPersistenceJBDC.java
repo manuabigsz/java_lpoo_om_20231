@@ -83,6 +83,7 @@ public class TestPersistenceJBDC {
 
     }
 
+       /*Realiza consulta de Curso*/
     //@Test
     public void testPersistenciaCurso() throws Exception {
 
@@ -107,6 +108,8 @@ public class TestPersistenceJBDC {
         }
     }
 
+    
+    /*Realiza consulta de Cargo*/
     //@Test
     public void testPersistenciaCargo() throws Exception {
 
@@ -188,7 +191,7 @@ public class TestPersistenceJBDC {
     
     }
     
-   @Test
+  @Test
     public void testPersistenciaListFuncionario() throws Exception {
     
     /*
@@ -211,7 +214,7 @@ public class TestPersistenceJBDC {
 
                     System.out.println("\nCPF: "+f.getCpf()+" Cargo: "+f.getCargo());
                                         
-                    jdbc.remover(f);
+                        jdbc.remover(f);
                     
                      for(Curso c: f.getCurso()){
                          
@@ -311,17 +314,17 @@ public class TestPersistenceJBDC {
         
     }
     
-   // @Test
+   //@Test
      public void testPersistenciaFuncionarioFind() throws Exception {
 
          PersistenciaJDBC jdbc = new PersistenciaJDBC();
 
         if (jdbc.conexaoAberta()) {
-            System.out.println("conectou no BD via JDBC ...");
+            System.out.println("conectou no BD via JDBC ...\n");
 
             //chama o método find da classe PersistencaiJDBC
             //modelo o retorno de Object para Peca
-            Funcionario f = (Funcionario) jdbc.find(Funcionario.class, "123125125");
+            Funcionario f = (Funcionario) jdbc.find(Funcionario.class, "1234567891");
             if (f == null) {
                 System.out.println("Não encontrou o funcionario com cpf informado");
             } else {

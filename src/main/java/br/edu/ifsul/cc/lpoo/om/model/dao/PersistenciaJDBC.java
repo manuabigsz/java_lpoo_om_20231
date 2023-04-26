@@ -403,6 +403,10 @@ public class PersistenciaJDBC implements InterfacePersistencia {
             PreparedStatement ps = this.con.prepareStatement("delete from tb_funcionario "
                     + "where cpf = ?;");
             ps.setString(1, f.getCpf());
+            
+             PreparedStatement psC = this.con.prepareStatement("delete from tb_funcionario_curso "
+                    + "where pessoa_cpf = ?;");
+              psC.setString(1, f.getCpf());
             //executa
             ps.execute();
             //fecha o cursor
@@ -559,20 +563,11 @@ public class PersistenciaJDBC implements InterfacePersistencia {
         //select na tb_peca
         PreparedStatement ps
                 = this.con.prepareStatement("select "
-                        + "f.data_admissao, "
-                        + "f.data_demissao, "
-                        + "f.numero_ctps, "
-                        + "f.cpf,"
-                        + "c.descricao as cargo,"
-                        + "p.tipo,"
-                        + "p.cpf,"
-                        + "p.cep,"
-                        + "p.complemento,"
-                        + "p.data_nascimento,"
-                        + "p.nome,"
-                        + "p.numero,"
-                        + "p.senha "
-                        + "from tb_funcionario f, tb_pessoa p, tb_cargo c where f.cpf=p.cpf and f.cargo = c.id;");
+                        + "id, "
+                        + "cargahoraria, "
+                        + "descricao, "
+                        + "dt_conclusao "
+                        + "from tb_curso;");
 
         //executa o comando SQL (select)
         ResultSet rs = ps.executeQuery();
@@ -585,17 +580,21 @@ public class PersistenciaJDBC implements InterfacePersistencia {
         while (rs.next()) {
 
             Curso c = new Curso();
+            
+            c.setId(rs.getInt("id"));//recupera pelo nome da coluna
+            c.setDescricao(rs.getString("descricao"));
+               
 
+             if (rs.getDate("dt_conclusao") != null) {
+
+                Calendar cData = Calendar.getInstance();
+                cData.setTimeInMillis(rs.getDate("dt_conclusao").getTime());
+               c.setDt_conclusao(cData);
+            }
             
 
-                c.setDescricao(rs.getString("descricao"));
-                c.setId(rs.getInt("id"));//recupera pelo nome da coluna
-
-            
-            
-
-            
-            listagemRetorno.add(f);
+             
+            listagemRetorno.add(c);
         }
 
         rs.close();//fecha o cursor do BD para essa consulta
@@ -605,7 +604,36 @@ public class PersistenciaJDBC implements InterfacePersistencia {
 
     @Override
     public List<Cargo> listCargo() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+     List<Cargo> listagemRetorno;
+
+        //select na tb_peca
+        PreparedStatement ps
+                = this.con.prepareStatement("select "
+                        + "descricao "
+                        + "from tb_cargo");
+
+        //executa o comando SQL (select)
+        ResultSet rs = ps.executeQuery();
+
+        listagemRetorno = new ArrayList();
+
+        //o método next recupera a proxima linha do resultado,
+        //se exitir uma linha retorna verdadeiro
+        //se nao existir uma linha retorna false.
+        while (rs.next()) {
+
+            Cargo c = new Cargo();
+            
+           
+            c.setDescricao(rs.getString("descricao"));
+                     
+            listagemRetorno.add(c);
+        }
+
+        rs.close();//fecha o cursor do BD para essa consulta
+
+        return listagemRetorno;//retorna a lista.
+    
     }
 
     @Override
