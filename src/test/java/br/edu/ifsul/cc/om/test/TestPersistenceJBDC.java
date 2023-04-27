@@ -185,7 +185,7 @@ public class TestPersistenceJBDC {
 
     }
 
-   // @Test
+   @Test
     public void testPersistenciaListFuncionario() throws Exception {
 
         /*
@@ -204,11 +204,11 @@ public class TestPersistenceJBDC {
             if (!listaF.isEmpty()) {
 
                 for (Funcionario f : listaF) {
-
+                    //ok
                     System.out.println("\nCPF: " + f.getCpf() + " Cargo: " + f.getCargo().getId());
 
                     System.out.println("\nCargo alterado:\nCPF: " + f.getCpf() + " Cargo: " + f.getCargo().getId());
-                    jdbc.remover(f);
+                
                     for (Curso c : f.getCurso()) {
 
                         System.out.println("\nCurso Descricao: " + c.getDescricao());
@@ -266,9 +266,11 @@ public class TestPersistenceJBDC {
                 //cria um novo cargo ou retorna o primeiro.
                 f.setCargo(getCargo(jdbc));
 
-                jdbc.persist(f); //insert na tabela.      
+                
+                jdbc.persist(f); //insert na tabela.
+                  System.out.println("Inseriu o Funcionario " + f.getCpf());
             }
-            System.out.println("Inseriu na tabela ...");
+    
             jdbc.fecharConexao();
 
         } else {

@@ -322,10 +322,11 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                         + ",data_demissao,"
                         + "numero_ctps, "
                         + "cpf, "
-                        + "cargo) values ?,?,?,?,?");
+                        + "cargo) "
+                        + "values ?,?,?,?,?");
 
                 //seta parametros.
-                ps.setDate(2, new java.sql.Date(f.getData_admissao().getTimeInMillis()));
+                ps.setDate(1, new java.sql.Date(f.getData_admissao().getTimeInMillis()));
 
                 if (f.getData_demissao() != null) {
                     Calendar dataDemissao = f.getData_demissao();
@@ -343,11 +344,8 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                     ps.setNull(5, java.sql.Types.DATE);
                 }
 
-                ResultSet rs = ps.getGeneratedKeys();
-                int idFuncionario = 0;
-                if (rs.next()) {
-                    idFuncionario = rs.getInt(1);
-                }
+                ps.execute();
+                ps.close();
 
                 for (Curso c : f.getCurso()) {
                     PreparedStatement psCurso = this.con.prepareStatement("select id from tb_curso where id = ?");
@@ -361,7 +359,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                     psCurso.close();
 
                     // inserir o registro na tabela associativa para o curso e o funcionário correspondentes
-                    if (idFuncionario > 0 && idCurso > 0) {
+                    if (idCurso > 0) {
                         PreparedStatement psAssoc = this.con.prepareStatement("insert into tb_funcionario_curso "
                                 + "(pessoa_cpf, curso_id) values (?, ?)");
                         psAssoc.setString(1, f.getCpf());
@@ -370,11 +368,11 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                         psAssoc.close();
                     }
                 }
-
-                ps.close();
+                 
                 Pessoa p = new Pessoa() {
                 };
-                PreparedStatement psPessoa = this.con.prepareStatement("insert into tb_pessoa (cpf, "
+                PreparedStatement psPessoa = this.con.prepareStatement("insert into tb_pessoa "
+                        + "(cpf, "
                         + "cep,"
                         + "complemento,"
                         + "data_nascimento,"
@@ -382,18 +380,19 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                         + "numero,"
                         + "senha) "
                         + "values "
-                        + "?,?,?,?,?,?,?,?);");
+                        + "?,?,?,?,?,?,?);");
 
                 psPessoa.setString(1, p.getCpf());
                 psPessoa.setString(2, p.getCep());
                 psPessoa.setString(3, p.getComplemento());
                 Calendar dataNasci = f.getData_nascimento();
                 java.sql.Date getdataNasci = new java.sql.Date(dataNasci.getTimeInMillis());
-                psPessoa.setDate(2, new java.sql.Date(getdataNasci.getTime()));
-
+                psPessoa.setDate(4, new java.sql.Date(getdataNasci.getTime()));
                 psPessoa.setString(5, p.getNome());
                 psPessoa.setString(6, p.getNumero());
                 psPessoa.setString(7, p.getSenha());
+                
+                psPessoa.execute();
                 psPessoa.close();
             } else {
 
@@ -509,9 +508,6 @@ public class PersistenciaJDBC implements InterfacePersistencia {
 
         } else if (o instanceof Funcionario) {
             Funcionario f = (Funcionario) o;
-
-            System.out.println("Entrou no remove funcionario");
-            System.out.println(f.getCpf());
             PreparedStatement psC = this.con.prepareStatement("delete from tb_funcionario_curso "
                     + "where pessoa_cpf = ?;");
             psC.setString(1, f.getCpf());
@@ -527,9 +523,12 @@ public class PersistenciaJDBC implements InterfacePersistencia {
             psP.setString(1, f.getCpf());
             psP.execute();
 
+            
             //executa
             //fecha o cursor
             ps.close();
+            
+            System.out.println("Removeu o funcionario");
         }
     }
 
