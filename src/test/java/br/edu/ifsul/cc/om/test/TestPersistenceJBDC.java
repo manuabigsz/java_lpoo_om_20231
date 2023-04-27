@@ -212,10 +212,15 @@ public class TestPersistenceJBDC {
             
                 for(Funcionario f : listaF){
 
-                    System.out.println("\nCPF: "+f.getCpf()+" Cargo: "+f.getCargo());
-                                        
-                        jdbc.remover(f);
-                    
+                    System.out.println("\nCPF: "+f.getCpf()+" Cargo: "+f.getCargo().getId());
+                                    
+                    Cargo car = new Cargo();
+                    car.setId(20);
+                    f.setCargo(car);
+                     jdbc.persist(f);
+                     
+                      System.out.println("\nCargo alterado:\nCPF: "+f.getCpf()+" Cargo: "+f.getCargo().getId());
+                       jdbc.remover(f);
                      for(Curso c: f.getCurso()){
                          
                     System.out.println("\nCurso Descricao: "+c.getDescricao());
@@ -226,9 +231,7 @@ public class TestPersistenceJBDC {
             }else{
                 Funcionario f = new Funcionario();
                 List<Curso> listaC = jdbc.listCurso();
-                 List<Cargo> listaCar = jdbc.listCargo();
                 Curso c = new Curso();
-                Cargo car = new Cargo();
                 Calendar dataAdm = null;
                 Calendar dataNas = null;
                 Calendar dataC = null;
@@ -262,6 +265,7 @@ public class TestPersistenceJBDC {
                 f.setCep("99876542");
                 f.setComplemento("Shopping");
                 f.setNumero("1234214");
+                
                
                  listaC.add(getCurso(jdbc));
                  f.setCurso(listaC);
