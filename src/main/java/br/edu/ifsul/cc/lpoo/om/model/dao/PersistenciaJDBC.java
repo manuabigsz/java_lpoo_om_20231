@@ -161,7 +161,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
 
                 ResultSet rsCursos = psCursos.executeQuery();
                 List<Curso> listCursos = new ArrayList<>();
-                
+
                 listCurso();
                 while (rsCursos.next()) {
                     Curso curso = new Curso();
@@ -325,35 +325,32 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                         + "cargo) values ?,?,?,?,?");
 
                 //seta parametros.
-                
                 ps.setDate(2, new java.sql.Date(f.getData_admissao().getTimeInMillis()));
-       
 
-                if(f.getData_demissao() != null){
+                if (f.getData_demissao() != null) {
                     Calendar dataDemissao = f.getData_demissao();
                     java.sql.Date getData_demissao = new java.sql.Date(dataDemissao.getTimeInMillis());
                     ps.setDate(2, new java.sql.Date(getData_demissao.getTime()));
-                }else{
+                } else {
                     ps.setNull(2, java.sql.Types.DATE);
                 }
                 ps.setString(3, f.getNumero_ctps());
                 ps.setString(4, f.getCpf());
-              
-                 if(f.getCargo().getId() != null){
-                     ps.setInt(5, f.getCargo().getId());
-                }else{
+
+                if (f.getCargo().getId() != null) {
+                    ps.setInt(5, f.getCargo().getId());
+                } else {
                     ps.setNull(5, java.sql.Types.DATE);
                 }
-               
+
                 ResultSet rs = ps.getGeneratedKeys();
                 int idFuncionario = 0;
                 if (rs.next()) {
                     idFuncionario = rs.getInt(1);
                 }
-                ps.close();
 
                 for (Curso c : f.getCurso()) {
-                    PreparedStatement psCurso = this.con.prepareStatement("select id from curso where id = ?");
+                    PreparedStatement psCurso = this.con.prepareStatement("select id from tb_curso where id = ?");
                     psCurso.setInt(1, c.getId());
                     ResultSet rsCurso = psCurso.executeQuery();
 
@@ -374,8 +371,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                     }
                 }
 
-                
-
+                ps.close();
                 Pessoa p = new Pessoa() {
                 };
                 PreparedStatement psPessoa = this.con.prepareStatement("insert into tb_pessoa (cpf, "
@@ -391,17 +387,16 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                 psPessoa.setString(1, p.getCpf());
                 psPessoa.setString(2, p.getCep());
                 psPessoa.setString(3, p.getComplemento());
-                 Calendar dataNasci = f.getData_nascimento();
+                Calendar dataNasci = f.getData_nascimento();
                 java.sql.Date getdataNasci = new java.sql.Date(dataNasci.getTimeInMillis());
-                ps.setDate(2, new java.sql.Date(getdataNasci.getTime()));
-           
+                psPessoa.setDate(2, new java.sql.Date(getdataNasci.getTime()));
+
                 psPessoa.setString(5, p.getNome());
                 psPessoa.setString(6, p.getNumero());
                 psPessoa.setString(7, p.getSenha());
                 psPessoa.close();
             } else {
-                   
-               
+
                 PreparedStatement ps = this.con.prepareStatement("update tb_funcionario"
                         + "set "
                         + "data_admissao=?"
@@ -411,38 +406,35 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                         + "cargo=? where cpf = ?");
 
                 //seta parametros.
-                 Calendar dataAdmissao = f.getData_admissao();
+                Calendar dataAdmissao = f.getData_admissao();
                 java.sql.Date getdataAdmissao = new java.sql.Date(dataAdmissao.getTimeInMillis());
                 ps.setDate(1, new java.sql.Date(getdataAdmissao.getTime()));
-       
 
-                if(f.getData_demissao() != null){
+                if (f.getData_demissao() != null) {
                     Calendar dataDemissao = f.getData_demissao();
                     java.sql.Date getData_demissao = new java.sql.Date(dataDemissao.getTimeInMillis());
                     ps.setDate(2, new java.sql.Date(getData_demissao.getTime()));
-                }else{
+                } else {
                     ps.setNull(2, java.sql.Types.DATE);
                 }
-              
+
                 ps.setString(3, f.getNumero_ctps());
                 ps.setString(4, f.getCpf());
-                
-                if(f.getCargo().getId() != null){
-                     ps.setInt(5, f.getCargo().getId());
-                }else{
+
+                if (f.getCargo().getId() != null) {
+                    ps.setInt(5, f.getCargo().getId());
+                } else {
                     ps.setNull(5, java.sql.Types.DATE);
                 }
-               
 
                 ResultSet rs = ps.getGeneratedKeys();
                 int idFuncionario = 0;
                 if (rs.next()) {
                     idFuncionario = rs.getInt(1);
                 }
-                ps.close();
 
                 for (Curso c : f.getCurso()) {
-                    PreparedStatement psCurso = this.con.prepareStatement("select id from curso where id = ?");
+                    PreparedStatement psCurso = this.con.prepareStatement("select id from tb_curso where id = ?");
                     psCurso.setInt(1, c.getId());
                     ResultSet rsCurso = psCurso.executeQuery();
 
@@ -451,7 +443,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                         idCurso = rsCurso.getInt("id");
                     }
                     psCurso.close();
-
+                    ps.close();
                     // inserir o registro na tabela associativa para o curso e o funcionário correspondentes
                     if (idFuncionario > 0 && idCurso > 0) {
                         PreparedStatement psAssoc = this.con.prepareStatement("update tb_funcionario_curso set"
@@ -463,8 +455,6 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                         psAssoc.close();
                     }
                 }
-
-           
 
                 Pessoa p = new Pessoa() {
                 };
@@ -482,12 +472,12 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                 psPessoa.setString(3, p.getComplemento());
                 Calendar dataNasci = f.getData_nascimento();
                 java.sql.Date getdataNasci = new java.sql.Date(dataNasci.getTimeInMillis());
-                ps.setDate(4, new java.sql.Date(getdataNasci.getTime()));
+                psPessoa.setDate(4, new java.sql.Date(getdataNasci.getTime()));
                 psPessoa.setString(5, p.getNome());
                 psPessoa.setString(6, p.getNumero());
                 psPessoa.setString(7, p.getSenha());
                 psPessoa.close();
-                
+
             }
 
         }
@@ -520,23 +510,24 @@ public class PersistenciaJDBC implements InterfacePersistencia {
         } else if (o instanceof Funcionario) {
             Funcionario f = (Funcionario) o;
 
+            System.out.println("Entrou no remove funcionario");
+            System.out.println(f.getCpf());
             PreparedStatement psC = this.con.prepareStatement("delete from tb_funcionario_curso "
                     + "where pessoa_cpf = ?;");
             psC.setString(1, f.getCpf());
-            
+            psC.execute();
+
             PreparedStatement ps = this.con.prepareStatement("delete from tb_funcionario "
                     + "where cpf = ?;");
             ps.setString(1, f.getCpf());
-            
+            ps.execute();
 
             PreparedStatement psP = this.con.prepareStatement("delete from tb_pessoa "
                     + "where cpf = ?;");
             psP.setString(1, f.getCpf());
-
-            
+            psP.execute();
 
             //executa
-            ps.execute();
             //fecha o cursor
             ps.close();
         }
