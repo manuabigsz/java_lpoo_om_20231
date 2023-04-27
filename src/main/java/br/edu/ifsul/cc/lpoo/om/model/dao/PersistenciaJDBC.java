@@ -322,8 +322,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                         + ",data_demissao,"
                         + "numero_ctps, "
                         + "cpf, "
-                        + "cargo,"
-                        + "curso) values ?,?,?,?,?,?");
+                        + "cargo) values ?,?,?,?,?");
 
                 //seta parametros.
                 
@@ -409,8 +408,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                         + ",data_demissao=?,"
                         + "numero_ctps=?, "
                         + "cpf=?, "
-                        + "cargo=?,"
-                        + "curso=? where cpf = ?");
+                        + "cargo=? where cpf = ?");
 
                 //seta parametros.
                  Calendar dataAdmissao = f.getData_admissao();
