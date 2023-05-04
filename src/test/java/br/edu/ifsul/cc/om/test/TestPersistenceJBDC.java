@@ -2,11 +2,13 @@ package br.edu.ifsul.cc.om.test;
 
 import br.edu.ifsul.cc.lpoo.om.model.Cargo;
 import br.edu.ifsul.cc.lpoo.om.model.Curso;
+import br.edu.ifsul.cc.lpoo.om.model.Equipe;
 import br.edu.ifsul.cc.lpoo.om.model.Funcionario;
 import br.edu.ifsul.cc.lpoo.om.model.Peca;
 import br.edu.ifsul.cc.lpoo.om.model.dao.PersistenciaJDBC;
 import br.edu.ifsul.cc.lpoo.om.model.dao.PersistenciaJPA;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import org.junit.Test;
@@ -161,7 +163,7 @@ public class TestPersistenceJBDC {
 
             } else {
 
-                System.out.println("Não encontrou o patente");
+                System.out.println("Não encontrou a peça");
 
                 Peca p = new Peca();
 
@@ -185,7 +187,7 @@ public class TestPersistenceJBDC {
 
     }
 
-   @Test
+    // @Test
     public void testPersistenciaListFuncionario() throws Exception {
 
         /*
@@ -208,7 +210,7 @@ public class TestPersistenceJBDC {
                     System.out.println("\nCPF: " + f.getCpf() + " Cargo: " + f.getCargo().getId());
 
                     System.out.println("\nCargo alterado:\nCPF: " + f.getCpf() + " Cargo: " + f.getCargo().getId());
-                
+
                     for (Curso c : f.getCurso()) {
 
                         System.out.println("\nCurso Descricao: " + c.getDescricao());
@@ -266,11 +268,10 @@ public class TestPersistenceJBDC {
                 //cria um novo cargo ou retorna o primeiro.
                 f.setCargo(getCargo(jdbc));
 
-                
                 jdbc.persist(f); //insert na tabela.
-                  System.out.println("Inseriu o Funcionario " + f.getCpf());
+                System.out.println("Inseriu o Funcionario " + f.getCpf());
             }
-    
+
             jdbc.fecharConexao();
 
         } else {
@@ -279,11 +280,126 @@ public class TestPersistenceJBDC {
         }
     }
 
+    // @Test
+    public void testPersistenciaFuncionarioFind() throws Exception {
+
+        PersistenciaJDBC jdbc = new PersistenciaJDBC();
+
+        if (jdbc.conexaoAberta()) {
+            System.out.println("conectou no BD via JDBC ...\n");
+
+            //chama o método find da classe PersistencaiJDBC
+            //modelo o retorno de Object para Peca
+            Funcionario f = (Funcionario) jdbc.find(Funcionario.class, "123125125");
+            if (f == null) {
+                System.out.println("Não encontrou o funcionario com cpf informado");
+            } else {
+                System.out.println("Encontrou o funcionario: " + f.getCpf());
+            }
+
+            jdbc.fecharConexao();
+        } else {
+            System.out.println("nao conectou no BD via JDBC ...");
+
+        }
+
+    }
+
+    @Test
+    public void testPersistenciaEquipe() throws Exception {
+
+        PersistenciaJDBC jdbc = new PersistenciaJDBC();
+
+        if (jdbc.conexaoAberta()) {
+            List<Equipe> listaE = jdbc.listEquipe();
+            //System.out.println(listaE);
+            if (!listaE.isEmpty()) {
+                System.out.println("Há equipes!");
+                for (Equipe e : listaE) {
+                    //ok
+                    System.out.println("\nId:" + e.getId() + " Especialidades: " + e.getEspecialidades() + " Nome: " + e.getNome());
+
+                    for (Funcionario f : e.getFuncionario()) {
+                        if (e.getFuncionario() != null) {
+                            System.out.println("\nFuncionários:\nNome: " + f.getNome() + " | CPF: " + f.getCpf() + " | Cargo: " + f.getCargo());
+                        } else {
+                            System.out.println("Não há funcionários!");
+                        }
+
+                    }
+                    jdbc.remover(e);
+                    System.out.println("Removeu a Equipe1");
+                }
+
+            } else {
+                System.out.println("não há equipes!");
+                Equipe e = new Equipe();
+
+                e.setNome("Equipe Financeiro");
+                e.setEspecialidades("Financeiro");
+
+                List<Funcionario> listFunc = new ArrayList();
+                Funcionario fn = (Funcionario) jdbc.find(Funcionario.class, "52738");
+            if(fn == null){
+                fn = new Funcionario();
+                
+                fn.setCpf("52738");
+                fn.setNome("Fulano");
+                fn.setCep("99000000");
+                fn.setNumero("123");
+                fn.setSenha("123456");
+                fn.setComplemento("casa");
+                fn.setNumero_ctps("1000");
+                fn.setData_nascimento(Calendar.getInstance());
+                fn.setCargo((Cargo) jdbc.find(Cargo.class, 1));
+                jdbc.persist(fn);
+            }else{
+                System.out.println("Encontrou o funcionario : "+fn.getCpf());
+            }
+            listFunc.add(fn);
+                
+                e.setFuncionario(listFunc);
+                
+                System.out.println(e.getFuncionario());
+                jdbc.persist(e); //insert na tabela.                
+                System.out.println("Cadastrou a Equipe " + e.getNome());
+            }
+
+        }
+    }
+
+    private Funcionario getFuncionario(PersistenciaJDBC jdbc) throws Exception {
+
+        List<Funcionario> list = jdbc.listFuncionario();
+        if (list.isEmpty()) {
+            System.out.println("Tentando cadastrar funcionário");
+            Funcionario fn = new Funcionario();
+
+            fn.setCpf("52738");
+            fn.setNome("Fulano");
+            fn.setCep("99000000");
+            fn.setNumero("123");
+            fn.setSenha("123456");
+            fn.setComplemento("casa");
+            fn.setNumero_ctps("1000");
+            fn.setData_nascimento(Calendar.getInstance());
+            fn.setCargo((Cargo) jdbc.find(Cargo.class, 1));
+
+            jdbc.persist(fn);
+
+            return fn;
+        } else {
+
+            return list.get(0);
+        }
+    }
+
     private Cargo getCargo(PersistenciaJDBC jdbc) throws Exception {
 
         List<Cargo> list = jdbc.listCargo();
         if (list.isEmpty()) {
             Cargo c = new Cargo();
+            c.setId(1);
             c.setDescricao("Mecanico Master");
             jdbc.persist(c);
 
@@ -311,34 +427,8 @@ public class TestPersistenceJBDC {
 
     }
 
-   // @Test
-    public void testPersistenciaFuncionarioFind() throws Exception {
-
-        PersistenciaJDBC jdbc = new PersistenciaJDBC();
-
-        if (jdbc.conexaoAberta()) {
-            System.out.println("conectou no BD via JDBC ...\n");
-
-            //chama o método find da classe PersistencaiJDBC
-            //modelo o retorno de Object para Peca
-            Funcionario f = (Funcionario) jdbc.find(Funcionario.class, "123125125");
-            if (f == null) {
-                System.out.println("Não encontrou o funcionario com cpf informado");
-            } else {
-                System.out.println("Encontrou o funcionario: " + f.getCpf());
-            }
-
-            jdbc.fecharConexao();
-        } else {
-            System.out.println("nao conectou no BD via JDBC ...");
-
-        }
-
-    }
-
 }
-
 //test
 /*
  
-    */
+ */

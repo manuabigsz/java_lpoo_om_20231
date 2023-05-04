@@ -2,6 +2,7 @@ package br.edu.ifsul.cc.lpoo.om.model.dao;
 
 import br.edu.ifsul.cc.lpoo.om.model.Cargo;
 import br.edu.ifsul.cc.lpoo.om.model.Curso;
+import br.edu.ifsul.cc.lpoo.om.model.Equipe;
 import br.edu.ifsul.cc.lpoo.om.model.Funcionario;
 import br.edu.ifsul.cc.lpoo.om.model.Peca;
 import br.edu.ifsul.cc.lpoo.om.model.Pessoa;
@@ -313,172 +314,163 @@ public class PersistenciaJDBC implements InterfacePersistencia {
             }
         } else if (o instanceof Funcionario) {
             Funcionario f = (Funcionario) o;
-
-            //utiliza data_admissao, pois será gerada pelo próprio BD.
-            //nesse caso, quando não houver data_admissao sera realizada insert.
-            if (f.getData_admissao() == null) {
-                PreparedStatement ps = this.con.prepareStatement("insert into tb_funcionario ("
-                        + "data_admissao"
-                        + ",data_demissao,"
-                        + "numero_ctps, "
-                        + "cpf, "
-                        + "cargo) "
-                        + "values ?,?,?,?,?");
-
-                //seta parametros.
-                ps.setDate(1, new java.sql.Date(f.getData_admissao().getTimeInMillis()));
-
-                if (f.getData_demissao() != null) {
-                    Calendar dataDemissao = f.getData_demissao();
-                    java.sql.Date getData_demissao = new java.sql.Date(dataDemissao.getTimeInMillis());
-                    ps.setDate(2, new java.sql.Date(getData_demissao.getTime()));
-                } else {
-                    ps.setNull(2, java.sql.Types.DATE);
-                }
-                ps.setString(3, f.getNumero_ctps());
-                ps.setString(4, f.getCpf());
-
-                if (f.getCargo().getId() != null) {
-                    ps.setInt(5, f.getCargo().getId());
-                } else {
-                    ps.setNull(5, java.sql.Types.DATE);
-                }
-
+            //utilizando a data_admissao, pois será gerada pelo próprio BD.
+            //nesse caso, quando não houver data_admissao realizará insert.
+            if(f.getData_admissao() == null){
+                
+                PreparedStatement ps = this.con.prepareStatement("insert into tb_pessoa (cpf, nome, numero, senha, complemento, tipo, cep, data_nascimento) values "
+                                                                 + "("
+                                                                 + "?, "
+                                                                 + "?, "
+                                                                 + "?, "
+                                                                 + "?, "
+                                                                 + "?, "
+                                                                 + "?, "
+                                                                 + "?, "
+                                                                 + "? "
+                                                                 + ")");
+                ps.setString(1, f.getCpf());
+                ps.setString(2, f.getNome());
+                ps.setString(3, f.getNumero());
+                ps.setString(4, f.getSenha());
+                ps.setString(5, f.getComplemento());
+                ps.setString(6, "F");
+                ps.setString(7, f.getCep());
+                ps.setDate(8, new java.sql.Date(f.getData_nascimento().getTimeInMillis()));
                 ps.execute();
                 ps.close();
-
-                for (Curso c : f.getCurso()) {
-                    PreparedStatement psCurso = this.con.prepareStatement("select id from tb_curso where id = ?");
-                    psCurso.setInt(1, c.getId());
-                    ResultSet rsCurso = psCurso.executeQuery();
-
-                    int idCurso = 0;
-                    if (rsCurso.next()) {
-                        idCurso = rsCurso.getInt("id");
-                    }
-                    psCurso.close();
-
-                    // inserir o registro na tabela associativa para o curso e o funcionário correspondentes
-                    if (idCurso > 0) {
-                        PreparedStatement psAssoc = this.con.prepareStatement("insert into tb_funcionario_curso "
-                                + "(pessoa_cpf, curso_id) values (?, ?)");
-                        psAssoc.setString(1, f.getCpf());
-                        psAssoc.setInt(2, idCurso);
-                        psAssoc.execute();
-                        psAssoc.close();
-                    }
-                }
-                 
-                Pessoa p = new Pessoa() {
-                };
-                PreparedStatement psPessoa = this.con.prepareStatement("insert into tb_pessoa "
-                        + "(cpf, "
-                        + "cep,"
-                        + "complemento,"
-                        + "data_nascimento,"
-                        + "nome,"
-                        + "numero,"
-                        + "senha) "
-                        + "values "
-                        + "?,?,?,?,?,?,?);");
-
-                psPessoa.setString(1, p.getCpf());
-                psPessoa.setString(2, p.getCep());
-                psPessoa.setString(3, p.getComplemento());
-                Calendar dataNasci = f.getData_nascimento();
-                java.sql.Date getdataNasci = new java.sql.Date(dataNasci.getTimeInMillis());
-                psPessoa.setDate(4, new java.sql.Date(getdataNasci.getTime()));
-                psPessoa.setString(5, p.getNome());
-                psPessoa.setString(6, p.getNumero());
-                psPessoa.setString(7, p.getSenha());
                 
-                psPessoa.execute();
-                psPessoa.close();
-            } else {
-
-                PreparedStatement ps = this.con.prepareStatement("update tb_funcionario"
-                        + "set "
-                        + "data_admissao=?"
-                        + ",data_demissao=?,"
-                        + "numero_ctps=?, "
-                        + "cpf=?, "
-                        + "cargo=? where cpf = ?");
-
-                //seta parametros.
-                Calendar dataAdmissao = f.getData_admissao();
-                java.sql.Date getdataAdmissao = new java.sql.Date(dataAdmissao.getTimeInMillis());
-                ps.setDate(1, new java.sql.Date(getdataAdmissao.getTime()));
-
-                if (f.getData_demissao() != null) {
-                    Calendar dataDemissao = f.getData_demissao();
-                    java.sql.Date getData_demissao = new java.sql.Date(dataDemissao.getTimeInMillis());
-                    ps.setDate(2, new java.sql.Date(getData_demissao.getTime()));
-                } else {
-                    ps.setNull(2, java.sql.Types.DATE);
-                }
-
-                ps.setString(3, f.getNumero_ctps());
-                ps.setString(4, f.getCpf());
-
-                if (f.getCargo().getId() != null) {
-                    ps.setInt(5, f.getCargo().getId());
-                } else {
-                    ps.setNull(5, java.sql.Types.DATE);
-                }
-
-                ResultSet rs = ps.getGeneratedKeys();
-                int idFuncionario = 0;
-                if (rs.next()) {
-                    idFuncionario = rs.getInt(1);
-                }
-
-                for (Curso c : f.getCurso()) {
-                    PreparedStatement psCurso = this.con.prepareStatement("select id from tb_curso where id = ?");
-                    psCurso.setInt(1, c.getId());
-                    ResultSet rsCurso = psCurso.executeQuery();
-
-                    int idCurso = 0;
-                    if (rsCurso.next()) {
-                        idCurso = rsCurso.getInt("id");
-                    }
-                    psCurso.close();
-                    ps.close();
-                    // inserir o registro na tabela associativa para o curso e o funcionário correspondentes
-                    if (idFuncionario > 0 && idCurso > 0) {
-                        PreparedStatement psAssoc = this.con.prepareStatement("update tb_funcionario_curso set"
-                                + "pessoa_cpf=?,"
-                                + " curso_id=?) where pessoa_cpf=?");
-                        psAssoc.setString(1, f.getCpf());
-                        psAssoc.setInt(2, idCurso);
-                        psAssoc.execute();
-                        psAssoc.close();
-                    }
-                }
-
-                Pessoa p = new Pessoa() {
-                };
-                PreparedStatement psPessoa = this.con.prepareStatement("update tb_pessoa "
-                        + "cpf=?, "
-                        + "cep=?,"
-                        + "complemento=?,"
-                        + "data_nascimento=?,"
-                        + "nome=?,"
-                        + "numero=?,"
-                        + "senha=? where cpf=?);");
-
-                psPessoa.setString(1, p.getCpf());
-                psPessoa.setString(2, p.getCep());
-                psPessoa.setString(3, p.getComplemento());
-                Calendar dataNasci = f.getData_nascimento();
-                java.sql.Date getdataNasci = new java.sql.Date(dataNasci.getTimeInMillis());
-                psPessoa.setDate(4, new java.sql.Date(getdataNasci.getTime()));
-                psPessoa.setString(5, p.getNome());
-                psPessoa.setString(6, p.getNumero());
-                psPessoa.setString(7, p.getSenha());
-                psPessoa.close();
-
+                ps = this.con.prepareStatement("insert into tb_funcionario (data_admissao, numero_ctps, cpf, cargo_id) values "
+                                                                 + "("
+                                                                 + "now(), "
+                                                                 + "?, "
+                                                                 + "?, "
+                                                                 + "? "                                                              
+                                                                 + ")");
+                ps.setString(1, f.getNumero_ctps());
+                ps.setString(2, f.getCpf());
+                ps.setInt(3, f.getCargo().getId());
+                ps.execute();
+                
+                ps.close();}
+            else{
+                 PreparedStatement ps = this.con.prepareStatement("update tb_pessoa set "
+                         + "cpf=?,"
+                         + "nome=?, "
+                         + "numero=?, "
+                         + "senha=?, "
+                         + "complemento=?, "
+                         + "tipo=?,"
+                         + " cep=?, "
+                         + "data_nascimento=? where cpf=?");
+                 
+                ps.setString(1, f.getCpf());
+                ps.setString(2, f.getNome());
+                ps.setString(3, f.getNumero());
+                ps.setString(4, f.getSenha());
+                ps.setString(5, f.getComplemento());
+                ps.setString(6, "F");
+                ps.setString(7, f.getCep());
+                ps.setDate(8, new java.sql.Date(f.getData_nascimento().getTimeInMillis()));
+                ps.execute();
+                ps.close();
+                
+                ps = this.con.prepareStatement("update tb_funcionario set"
+                        + "data_admissao=?,"
+                        + "numero_ctps=?,"
+                        + " cpf=?,"
+                        + " cargo_id=? where cpf=? ");
+                
+                ps.setString(1, f.getNumero_ctps());
+                ps.setString(2, f.getCpf());
+                ps.setInt(3, f.getCargo().getId());
+                ps.execute();
             }
 
+        } else if (o instanceof Equipe) {
+            Equipe e = (Equipe) o;
+            if (e.getId() == null) {
+                //insert into tb_peca...
+
+                PreparedStatement ps = this.con.prepareStatement("insert into tb_equipe (id,"
+                        + "especialidades,"
+                        + "nome) "
+                        + "values (nextval('seq_equipe_id'), "
+                        + "?,?);");
+                //seta parametros.
+                ps.setString(1, e.getEspecialidades()); //seta fornecedor, do tipo vchar, com indice 1, e pega o forncedor
+                ps.setString(2, e.getNome());
+                //executa o insert
+                ps.execute();
+              
+               /* //fecha o cursor
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()) {
+                    e.setId(rs.getInt("id"));
+                }
+
+                if (e.getFuncionario() != null && !e.getFuncionario().isEmpty()) {
+
+                    for (Funcionario f : e.getFuncionario()) {
+
+                        PreparedStatement ps2 = this.con.prepareStatement("insert into tb_equipe_funcionario (equipe_id, funcionario_cpf) "
+                                + "values (?, ?) ");
+
+                        ps2.setInt(1, e.getId());
+                        ps2.setString(2, f.getCpf());
+                        ps2.execute();
+
+                        ps2.close();
+
+                    }
+                    
+                    rs.close();
+                }*/
+                
+                ps.close();
+            } else {
+                //update tb_peca set..
+
+                PreparedStatement ps = this.con.prepareStatement("update tb_equipe "
+                        + "set especialidades = ?, "
+                        + "set nome = ?"
+                        + "where equipe_id=?");
+                ps.setString(1, e.getEspecialidades()); //seta fornecedor, do tipo vchar, com indice 1, e pega o forncedor
+
+                //seta parametros.
+                ps.setString(1, e.getNome()); //seta fornecedor, do tipo vchar, com indice 1, e pega o forncedor
+                //executa o insert
+                ps.execute();
+               
+                
+                ResultSet rs = ps.executeQuery();
+                if (rs.next()) {
+                    e.setId(rs.getInt("id"));
+                }
+
+                if (e.getFuncionario() != null && !e.getFuncionario().isEmpty()) {
+
+                    for (Funcionario f : e.getFuncionario()) {
+
+                        PreparedStatement ps2 = this.con.prepareStatement("update tb_equipe_funcionario set "
+                                + "equipe_id=?, funcionario_cpf=?) "
+                                + "where equipe_id= ?; ");
+
+                        ps2.setInt(1, e.getId());
+                        ps2.setString(2, f.getCpf());
+                        ps2.execute();
+
+                        ps2.close();
+
+                    }
+
+                    rs.close();
+
+                    //fecha o cursor
+                    ps.close();
+
+                }
+            }
         }
     }
 
@@ -523,12 +515,29 @@ public class PersistenciaJDBC implements InterfacePersistencia {
             psP.setString(1, f.getCpf());
             psP.execute();
 
-            
             //executa
             //fecha o cursor
             ps.close();
-            
+
             System.out.println("Removeu o funcionario");
+        } else if (o instanceof Equipe) {
+            Equipe e = (Equipe) o;
+            PreparedStatement ps = this.con.prepareStatement("delete from tb_equipe_funcionario where equipe_id = ?; ");
+          
+            ps.setInt(1, e.getId());
+            
+            ps.execute();
+            
+            ps.close();
+            
+            ps = this.con.prepareStatement("delete from tb_equipe where id = ?; ");
+          
+            ps.setInt(1, e.getId());
+            
+            ps.execute();
+            
+            ps.close();
+
         }
     }
 
@@ -719,6 +728,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
 
     @Override
     public List<Cargo> listCargo() throws Exception {
+        
         List<Cargo> listagemRetorno;
 
         //select na tb_peca
@@ -753,6 +763,118 @@ public class PersistenciaJDBC implements InterfacePersistencia {
     @Override
     public Funcionario doLogin(String cpf, String senha) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+   /* @Override
+    public List<Equipe> listEquipe() throws Exception {
+        List<Equipe> listagemRetornoEquipe;
+
+        //select na tb_equipe
+        PreparedStatement psEquipe
+                = this.con.prepareStatement("select "
+                        + "e.id,e.especialidades,e.nome,"
+                        + "f.data_admissao,f.data_demissao, f.numero_ctps,"
+                        + "f.cpf, c.descricao as cargo, "
+                        + "p.tipo, p.cpf, p.cep,"
+                        + "p.complemento,p.data_nascimento, p.nome, p.numero,"
+                        + "p.senha, "
+                        + "ef.equipe_id, ef.funcionario_cpf "
+                        + "from tb_equipe e, tb_funcionario f, tb_pessoa p, "
+                        + "tb_cargo c, tb_equipe_funcionario ef "
+                        + "where e.id=ef.equipe_id and f.cpf = ef.funcionario_cpf;");
+
+        //executa o comando SQL (select)
+        ResultSet rsEquipe = psEquipe.executeQuery();
+
+        listagemRetornoEquipe = new ArrayList();
+
+        while (rsEquipe.next()) {
+
+            Equipe e = new Equipe();
+            
+            e.setId(rsEquipe.getInt("id"));
+            e.setEspecialidades(rsEquipe.getString("especialidades"));
+
+            PreparedStatement psFunc
+                    = this.con.prepareStatement("select f.cpf, p.nome, c.descricao as cargo from tb_equipe e, tb_funcionario f, tb_pessoa p, tb_cargo c, "
+                            + "tb_equipe_funcionario ef where e.id=ef.equipe_id and f.cpf = ef.funcionario_cpf;");
+
+            ResultSet rsFunc = psFunc.executeQuery();
+            List<Funcionario> listFunc = new ArrayList();
+            while (rsFunc.next()) {
+                //criar um objeto do tipo curso
+                //setar a descricao e o id do curso
+                //adicionar o curso na lista
+                Funcionario f = new Funcionario();
+                f.setNome(rsFunc.getString("nome"));
+                f.setCpf(rsFunc.getString("cpf"));
+                Cargo car = new Cargo();
+                car.setDescricao(rsFunc.getString("cargo"));
+                f.setCargo(car);
+                listFunc.add(f);
+
+            }
+            rsFunc.close();
+
+            e.setFuncionario(listFunc);
+            listagemRetornoEquipe.add(e);
+            
+        }
+        rsEquipe.close();//fecha o cursor do BD para essa consulta
+        
+       
+        return listagemRetornoEquipe;//retorna a lista.
+    }*/
+    
+    @Override
+    public List<Equipe> listEquipe() throws Exception {
+        
+        List<Equipe> listagemRetorno;
+        
+        //select na tb_equipe
+        PreparedStatement ps = 
+                this.con.prepareStatement("select id, especialidades, nome "
+                                        + "from tb_equipe order by id asc;");
+               
+        //executa o comando SQL (select)
+        ResultSet rs = ps.executeQuery();
+        listagemRetorno = new ArrayList();
+        while(rs.next()){
+            
+            Equipe e = new Equipe();
+            e.setId(rs.getInt("id"));
+            e.setNome(rs.getString("nome"));
+            e.setEspecialidades(rs.getString("especialidades"));
+            
+              PreparedStatement ps2 = 
+                this.con.prepareStatement("select equipe_id, funcionario_cpf from tb_equipe_funcionario where equipe_id = ? ");
+              ps2.setInt(1, e.getId());
+              
+              ResultSet rs2 = ps2.executeQuery();
+              List<Funcionario> listfunc = new ArrayList();
+              while(rs2.next()){
+                  Funcionario f= new Funcionario();
+                  Cargo c = new Cargo();
+                  //c.setId();
+                  f.setCargo(c);
+                  
+                  f.setCpf(rs2.getString("funcionario_cpf"));                
+                  listfunc.add(f);
+              }
+              e.setFuncionario(listfunc);
+              
+              rs2.close();
+            
+            //select equipe_id, funcionario_cpf from tb_equipe_funcionario where equipe_id = 1;
+            //recuperar os funcionarios da equipe.
+            
+            listagemRetorno.add(e);
+        }
+        rs.close();
+        
+        return listagemRetorno;
+        
+        
     }
 
 }

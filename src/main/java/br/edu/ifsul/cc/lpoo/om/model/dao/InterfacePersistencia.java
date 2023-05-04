@@ -6,6 +6,7 @@ package br.edu.ifsul.cc.lpoo.om.model.dao;
 
 import br.edu.ifsul.cc.lpoo.om.model.Cargo;
 import br.edu.ifsul.cc.lpoo.om.model.Curso;
+import br.edu.ifsul.cc.lpoo.om.model.Equipe;
 import br.edu.ifsul.cc.lpoo.om.model.Funcionario;
 import br.edu.ifsul.cc.lpoo.om.model.Peca;
 import java.util.List;
@@ -32,6 +33,8 @@ public interface InterfacePersistencia {
        public List <Curso> listCurso() throws Exception;
        
       public List <Cargo> listCargo() throws Exception;
+      
+           public List <Equipe> listEquipe() throws Exception;
     
     public Funcionario doLogin(String cpf, String senha) throws Exception; //select 
 }

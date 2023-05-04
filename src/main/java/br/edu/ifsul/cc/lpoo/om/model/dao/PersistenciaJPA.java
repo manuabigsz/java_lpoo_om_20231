@@ -6,6 +6,7 @@ package br.edu.ifsul.cc.lpoo.om.model.dao;
 
 import br.edu.ifsul.cc.lpoo.om.model.Cargo;
 import br.edu.ifsul.cc.lpoo.om.model.Curso;
+import br.edu.ifsul.cc.lpoo.om.model.Equipe;
 import br.edu.ifsul.cc.lpoo.om.model.Funcionario;
 import br.edu.ifsul.cc.lpoo.om.model.Peca;
 import java.util.List;
@@ -88,6 +89,11 @@ public class PersistenciaJPA implements InterfacePersistencia{
     @Override
     public List<Cargo> listCargo() throws Exception {
        return entity.createNamedQuery("Cargo.getbyid").getResultList();
+    }
+
+    @Override
+    public List<Equipe> listEquipe() throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 

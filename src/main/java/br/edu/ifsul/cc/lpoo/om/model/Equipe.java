@@ -26,7 +26,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="tb_equipe")
 public class Equipe implements Serializable{
-     @Id
+    @Id
     @SequenceGenerator(name = "seq_equipe", sequenceName = "seq_equipe_id", allocationSize = 1)
     @GeneratedValue(generator = "seq_equipe", strategy = GenerationType.SEQUENCE)   
     private Integer id;
