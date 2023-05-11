@@ -305,7 +305,7 @@ public class TestPersistenceJBDC {
 
     }
 
-    @Test
+   /* @Test
     public void testPersistenciaEquipe() throws Exception {
 
         PersistenciaJDBC jdbc = new PersistenciaJDBC();
@@ -392,7 +392,7 @@ public class TestPersistenceJBDC {
 
             return list.get(0);
         }
-    }
+    }*/
 
     private Cargo getCargo(PersistenciaJDBC jdbc) throws Exception {
 
@@ -427,6 +427,81 @@ public class TestPersistenceJBDC {
 
     }
 
+    @Test
+    public void testPersistenciaListEquipe() throws Exception {
+        
+        PersistenciaJDBC jdbc = new PersistenciaJDBC();
+        if(jdbc.conexaoAberta()){
+            System.out.println("testPersistenciaListEquie: conectou no BD via jdbc ...");
+            
+            List<Equipe> lista = jdbc.listEquipe();
+            if(!lista.isEmpty()){
+                
+                //questao 4.a
+                for(Equipe e: lista){
+                    System.out.println("Equipe: "+e.getId());
+                    
+                    //questao 4.c
+                    System.out.println("...Removendo a equipe "+e.getId());
+                    jdbc.remover(e);
+                     
+                }
+                
+            }else{
+               //questao 4.b 
+               Equipe e = new Equipe();
+               e.setNome("equipe de pintura");
+               e.setEspecialidades("pintura em madeira, ferro, alvenaria, etc..");
+               
+               List<Funcionario> listFunc = new ArrayList();
+               listFunc.add(getFuncionario());
+               
+               e.setFuncionario(listFunc);
+               
+                System.out.println("Criando equipe com um funcionario ...");
+               jdbc.persist(e);
+                
+            }
+            
+            jdbc.fecharConexao();
+        }else{
+             System.out.println("testPersistenciaListEquie: nao conectou no BD via jdbc ...");
+        }
+    }
+ 
+    
+    private Funcionario getFuncionario() throws Exception {
+        
+         //criar um objeto do tipo PersistenciaJDBC.
+        Funcionario fn = null;
+        PersistenciaJDBC jdbc = new PersistenciaJDBC();
+        if(jdbc.conexaoAberta()){
+            System.out.println("testPersistenciaListFuncionario: conectou no BD via jdbc ...");
+            
+            fn = (Funcionario) jdbc.find(Funcionario.class, "52738");
+            if(fn == null){
+                fn = new Funcionario();
+                
+                fn.setCpf("52738");
+                fn.setNome("Fulano");
+                fn.setCep("99000000");
+                fn.setNumero("123");
+                fn.setSenha("123456");
+                fn.setComplemento("casa");
+                fn.setNumero_ctps("1000");
+                fn.setData_nascimento(Calendar.getInstance());
+                fn.setCargo((Cargo) jdbc.find(Cargo.class, 1));
+                jdbc.persist(fn);
+            }else{
+                System.out.println("Encontrou o funcionario : "+fn.getCpf());
+            }
+            
+        }else{
+             System.out.println("testPersistenciaListPeca: nao conectou no BD via jdbc ...");
+        }
+        
+        return fn;
+    }
 }
 //test
 /*

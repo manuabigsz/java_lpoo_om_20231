@@ -388,46 +388,43 @@ public class PersistenciaJDBC implements InterfacePersistencia {
             }
 
         } else if (o instanceof Equipe) {
-            Equipe e = (Equipe) o;
-            if (e.getId() == null) {
-                //insert into tb_peca...
+           Equipe e = (Equipe) o;
+            
+            if(e.getId() == null){
+                
+                    PreparedStatement ps = this.con.prepareStatement("insert into tb_equipe (id, nome, especialidades) "
+                                                                             + "values "
+                                                                             + "(nextval('seq_equipe_id'), "
+                                                                             + "?, ?) returning id; ");                                   
+                  
+                    ps.setString(1, e.getNome());
+                    ps.setString(2, e.getEspecialidades());
+                    
+                    ResultSet rs = ps.executeQuery();
+                    
+                    if(rs.next()){
+                        
+                        e.setId(rs.getInt("id"));
+                        
+                        if(e.getFuncionario() != null && !e.getFuncionario().isEmpty()){
 
-                PreparedStatement ps = this.con.prepareStatement("insert into tb_equipe (id,"
-                        + "especialidades,"
-                        + "nome) "
-                        + "values (nextval('seq_equipe_id'), "
-                        + "?,?);");
-                //seta parametros.
-                ps.setString(1, e.getEspecialidades()); //seta fornecedor, do tipo vchar, com indice 1, e pega o forncedor
-                ps.setString(2, e.getNome());
-                //executa o insert
-                ps.execute();
-              
-               /* //fecha o cursor
-                ResultSet rs = ps.executeQuery();
-                if (rs.next()) {
-                    e.setId(rs.getInt("id"));
-                }
+                            for(Funcionario f : e.getFuncionario()){
 
-                if (e.getFuncionario() != null && !e.getFuncionario().isEmpty()) {
+                                PreparedStatement ps2 = this.con.prepareStatement("insert into tb_equipe_funcionario (equipe_id, funcionario_cpf) "
+                                                                                 + "values "
+                                                                                 + "(?, "
+                                                                                 + "?); ");                                   
+                                ps2.setInt(1, e.getId());
+                                ps2.setString(2, f.getCpf());
 
-                    for (Funcionario f : e.getFuncionario()) {
+                                ps2.execute();
 
-                        PreparedStatement ps2 = this.con.prepareStatement("insert into tb_equipe_funcionario (equipe_id, funcionario_cpf) "
-                                + "values (?, ?) ");
-
-                        ps2.setInt(1, e.getId());
-                        ps2.setString(2, f.getCpf());
-                        ps2.execute();
-
-                        ps2.close();
-
+                                ps2.close();
+                            }
+                        }
+                                 
                     }
                     
-                    rs.close();
-                }*/
-                
-                ps.close();
             } else {
                 //update tb_peca set..
 
