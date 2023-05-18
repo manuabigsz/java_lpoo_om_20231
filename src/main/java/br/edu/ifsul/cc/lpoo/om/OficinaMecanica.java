@@ -24,10 +24,10 @@ public class OficinaMecanica {
         - Implementar o método initComponentes na classe JFramePrincipal com base no exemplo do CS::go
     
      */
-
     private Controle controle;
 
-    OficinaMecanica() {
+    private OficinaMecanica() {
+
         try {
             controle = new Controle();//cria a instancia e atribui para o atributo controle.
 
@@ -51,7 +51,8 @@ public class OficinaMecanica {
     }
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+
+        System.out.println("OficinaMecanica");
         new OficinaMecanica();
     }
 }

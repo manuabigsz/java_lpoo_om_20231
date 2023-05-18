@@ -18,13 +18,12 @@ import javax.swing.JPanel;
  * @author 20212pf.cc0010
  */
 public class JFramePrincipal extends JFrame implements WindowListener{
-    
     private Controle controle;
+
     
-    public CardLayout cardLayout;
+     public CardLayout cardLayout;
     
     public JPanel painel;//painel.
-    
     
     public JFramePrincipal(Controle controle){
         
@@ -34,11 +33,10 @@ public class JFramePrincipal extends JFrame implements WindowListener{
         
     }
     
-    
-    private void initComponents(){
+     private void initComponents(){
         //customização do JFrame
         
-        this.setTitle("Sisteminha para CRUD - CS::GO"); //seta o título do jframe
+        this.setTitle("Sisteminha para CRUD - Oficina Mecânica"); //seta o título do jframe
         
         this.setMinimumSize(new Dimension(600,600)); //tamanho minimo quando for reduzido.
         
@@ -54,10 +52,9 @@ public class JFramePrincipal extends JFrame implements WindowListener{
         painel.setLayout(cardLayout);//definindo o cardLayout para o paineldeFundo
                 
         this.add(painel);  //adiciona no JFrame o paineldeFundo
-                
-    }
-    
-    public void addTela(JPanel p, String nome){   
+     }
+     
+      public void addTela(JPanel p, String nome){   
         
             painel.add(p, nome); //adiciona uma "carta no baralho".
     }
@@ -66,52 +63,44 @@ public class JFramePrincipal extends JFrame implements WindowListener{
         
             cardLayout.show(painel, nome); //localiza a "carta no baralho" e mostra.
     }
-
-
-    public void setVisible(boolean b) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    private void add(JPanel painel) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    private void addWindowListener(JFramePrincipal aThis) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+     
+       @Override
+    public void windowOpened(WindowEvent we) {
+        
+        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public void windowOpened(WindowEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void windowClosing(WindowEvent we) {
+                
+        System.out.println("Fechando o jframe ..");
+        
+        controle.fecharBD(); //fecha a conexao com o BD antes de finalizar o processo.
+    
     }
 
     @Override
-    public void windowClosing(WindowEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void windowClosed(WindowEvent we) {
+        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public void windowClosed(WindowEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void windowIconified(WindowEvent we) {
+        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public void windowIconified(WindowEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void windowDeiconified(WindowEvent we) {
+        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public void windowDeiconified(WindowEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void windowActivated(WindowEvent we) {
+        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
     @Override
-    public void windowActivated(WindowEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    @Override
-    public void windowDeactivated(WindowEvent e) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void windowDeactivated(WindowEvent we) {
+        //throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
