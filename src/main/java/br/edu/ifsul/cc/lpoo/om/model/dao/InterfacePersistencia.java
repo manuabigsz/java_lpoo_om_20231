@@ -36,5 +36,5 @@ public interface InterfacePersistencia {
       
            public List <Equipe> listEquipe() throws Exception;
     
-    public Funcionario doLogin(String cpf, String senha) throws Exception; //select 
+    public Funcionario doLogin(String cpf, String senha, String tipo) throws Exception; //select 
 }

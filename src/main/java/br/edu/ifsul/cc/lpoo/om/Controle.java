@@ -61,14 +61,14 @@ public class Controle {
 
     }
     
-      public void autenticar(String cpf, String senha) {
+      public void autenticar(String cpf, String senha, String tipo) {
         //  implementar o metodo doLogin da classe PersistenciaJDBC
         //  chamar o doLogin e verificar o retorno.
         // se o retorno for nulo, informar ao usuário
         //se nao for nulo, apresentar a tela de boas vindas e o menu.
         try{
 
-            Funcionario f =  conexaoJDBC.doLogin(cpf, senha);
+            Funcionario f =  conexaoJDBC.doLogin(cpf, senha,tipo);
             
             if(f != null){
 

@@ -154,7 +154,7 @@ public class TestPersistenceJPA {
             Passo 2: se a lista.size() > 0 listar e remover o funcionário.
             Passo 3: se a lista.size() == 0 inserir um funcionário e associar cursos..
      */
-    //@Test
+   // @Test
     public void testPersistenciaListFuncionario() throws Exception {
 
         PersistenciaJPA persistencia = new PersistenciaJPA();
@@ -223,7 +223,7 @@ public class TestPersistenceJPA {
                 f.setNumero_ctps("1234");
                 f.setData_admissao(dataAdm);
                 f.getData_demissao();
-                f.setCpf("123125125");
+                f.setCpf("12345678912");
                 f.setNome("Joao");
                 f.setSenha("senha123");
                 f.setData_nascimento(dataNas);

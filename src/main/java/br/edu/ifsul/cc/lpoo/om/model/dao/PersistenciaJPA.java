@@ -71,7 +71,7 @@ public class PersistenciaJPA implements InterfacePersistencia{
         return entity.createNamedQuery("Peca.getbyid").getResultList();    }
 
     @Override
-    public Funcionario doLogin(String cpf, String senha) throws Exception {
+    public Funcionario doLogin(String cpf, String senha,String tipo) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
@@ -96,6 +96,7 @@ public class PersistenciaJPA implements InterfacePersistencia{
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+    
 
 
    

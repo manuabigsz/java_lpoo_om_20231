@@ -254,7 +254,7 @@ public class TestPersistenceJBDC {
                 f.setNumero_ctps("1234");
                 f.setData_admissao(dataAdm);
                 f.getData_demissao();
-                f.setCpf("123125125");
+                f.setCpf("12345678912");
                 f.setNome("Joao");
                 f.setSenha("senha123");
                 f.setData_nascimento(dataNas);

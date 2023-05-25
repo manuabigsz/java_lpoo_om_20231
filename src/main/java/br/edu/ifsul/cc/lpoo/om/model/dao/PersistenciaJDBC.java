@@ -758,8 +758,26 @@ public class PersistenciaJDBC implements InterfacePersistencia {
     }
 
     @Override
-    public Funcionario doLogin(String cpf, String senha) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public Funcionario doLogin(String cpf, String senha, String tipo) throws Exception {
+          Funcionario funcionario = null;
+        
+         PreparedStatement ps = 
+            this.con.prepareStatement("select f.cpf, p.senha from tb_funcionario f, tb_pessoa p  where f.cpf= ? and p.senha = ? and p.tipo='F';");
+                        
+            ps.setString(1, cpf);
+            ps.setString(2, senha);
+             ps.setString(3, tipo);
+            
+            ResultSet rs = ps.executeQuery();//o ponteiro do REsultSet inicialmente está na linha -1
+            
+            if(rs.next()){//se a matriz (ResultSet) tem uma linha
+
+                funcionario = new Funcionario();
+                funcionario.setCpf(rs.getString("cpf"));                
+            }
+        
+            ps.close();
+            return funcionario; 
     }
 
    /* @Override
